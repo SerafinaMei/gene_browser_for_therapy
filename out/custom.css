@@ -1,9 +1,0 @@
-/* Optional appearance overrides. This file loads after the main stylesheet.
-   Change text, colors and basic dimensions in site-config.json first.
-
-   Example: make report headings a little smaller
-   .gene-heading h1 { font-size: 24px; }
-
-   Example: make table rows more compact
-   td { padding-top: 10px; padding-bottom: 10px; }
-*/
