@@ -1,0 +1,24 @@
+{
+  "title": "D&D Gene Browser",
+  "organization": "Capra Lab",
+  "status_label": "Test version",
+  "footer_note": "Research use",
+  "search_heading": "Search for a gene",
+  "description": "Clinical annotations, dosage sensitivity, variant counts and experimental data.",
+  "search_label": "Gene symbol, name or ID",
+  "search_placeholder": "e.g. AARS1 or HGNC:20",
+  "search_help": "Supports gene symbols, HGNC, Ensembl and NCBI Gene IDs.",
+  "example_genes": ["AARS1", "PMP22", "SPTLC1"],
+  "font_family": "system",
+  "body_font_size": 14,
+  "content_width": 1244,
+  "theme": {
+    "text": "#24292f",
+    "muted": "#59636e",
+    "border": "#d8dde3",
+    "surface": "#f6f7f9",
+    "link": "#285b88",
+    "background": "#ffffff",
+    "primary": "#34495e"
+  }
+}

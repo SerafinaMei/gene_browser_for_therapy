@@ -1,0 +1,14 @@
+{
+  "source": "https://rest.ensembl.org/lookup/symbol/homo_sapiens/SPTLC1?content-type=application/json",
+  "retrieved": "2026-11-01",
+  "records": [
+    {
+      "id": "ENSG00000090054",
+      "display_name": "SPTLC1",
+      "seq_region_name": "9",
+      "start": 92000087,
+      "end": 92115491,
+      "assembly_name": "GRCh38"
+    }
+  ]
+}

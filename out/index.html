@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-json-encoding="gzip" data-build-version="5409339e0f27083a">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Clinical annotations, dosage sensitivity, variant counts and experimental data.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#ffffff">
+  <title>D&amp;D Gene Browser · Test version</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css?v=5409339e0f27083a">
+  <link rel="stylesheet" href="custom.css?v=5409339e0f27083a">
+  <script src="app.js?v=5409339e0f27083a" type="module"></script>
+</head>
+<body data-view="home">
+  <a class="skip" href="#gene-search">Skip to gene search</a>
+  <header class="site-header"><div class="header-inner">
+    <a href="#view=search" class="brand"><span id="site-name">D&amp;D Gene Browser</span> <span id="site-status" class="test-label">Test version</span></a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <button id="search-nav" class="selected">Search</button>
+      <button id="browse-nav">Browse genes</button>
+      <button id="compare-nav">Compare <span id="compare-count">0</span></button>
+      <button id="sources-nav">Data sources</button>
+      <button id="help-button">Help</button>
+    </nav>
+  </div></header>
+  <div class="workspace">
+    <section class="search-section" aria-label="Gene search">
+      <div class="search-intro"><h1 id="search-heading">Search for a gene</h1><p id="search-description">Clinical annotations, dosage sensitivity, variant counts and experimental data.</p></div>
+      <form id="search-form" role="search">
+        <label id="search-label" class="search-label" for="gene-search">Gene symbol, name or ID</label>
+        <div class="search-row">
+          <input id="gene-search" type="search" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="search-results" aria-describedby="search-help" aria-expanded="false" placeholder="e.g. AARS1 or HGNC:20" disabled>
+          <button id="search-submit" type="submit" class="primary" disabled>Search</button>
+        </div>
+        <div id="search-results" role="listbox" hidden></div>
+      </form>
+      <p id="search-help" class="search-help">Supports gene symbols, HGNC, Ensembl and NCBI Gene IDs.</p>
+      <div id="search-examples" class="search-examples"><span>Examples:</span><button data-gene="AARS1">AARS1</button><button data-gene="PMP22">PMP22</button><button data-gene="SPTLC1">SPTLC1</button></div>
+    </section>
+    <main id="main" tabindex="-1"><p class="home-status" role="status">Loading gene data…</p></main>
+  </div>
+  <footer><span id="site-footer">Capra Lab · Test version · Research use</span><a href="#view=sources">Data sources and definitions</a></footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dialog"><button class="dialog-close" aria-label="Close dialog">×</button><div id="dialog-content"></div></dialog>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+  "previous_strategy_genes": 593,
+  "examined_run_summaries": [
+    {
+      "path": "Grace_pipeline/high_coverage_result/RUN_MULTIALLELIC/summary_files/dnd_summary.csv",
+      "genes": 593,
+      "rows": 737,
+      "sha256": "542028f2bfdeed558c68336491f822d2c78163152c1d8014108a49daa6df7349"
+    },
+    {
+      "path": "Grace_pipeline/261011_RUN_final/summary_files/dnd_summary.csv",
+      "genes": 593,
+      "rows": 737,
+      "sha256": "542028f2bfdeed558c68336491f822d2c78163152c1d8014108a49daa6df7349"
+    },
+    {
+      "path": "Grace_pipeline/RUN_SMEI_STAGEA_FILTERED_0608/indels/ubiq_region_CommonVars/CommonVars_ALL_summary.txt",
+      "genes": 593,
+      "rows": 593,
+      "sha256": "aa3ce36856d3379c94a07d181aebfd260cab317196cd5a0519036a846ea259fd"
+    }
+  ],
+  "expanded_input_genes": 1007,
+  "expanded_assessed_genes": 1006,
+  "extra_input_genes": 414,
+  "extra_assessed_genes": 413,
+  "missing_chromosome_inputs": [
+    "SRY"
+  ],
+  "nmd_model_exclusions": [
+    "MIR96",
+    "TERC",
+    "XIST"
+  ],
+  "expanded_strategies": [
+    "exonic indel",
+    "NMD",
+    "splice base editing"
+  ],
+  "expanded_strategies_not_run": [
+    "excision",
+    "CRISPRoff"
+  ],
+  "all_gene_run_found": false,
+  "remote_wynton_path_mounted": false,
+  "source_validation": {
+    "status": "PASS",
+    "input_genes": 1007,
+    "HI_genes_assessed": 417,
+    "primary_genes": 215,
+    "primary_guide_variant_pairs_sequence_checked": 1720,
+    "all_provisional_edit_bases_verified": true,
+    "counts_reconciled": true,
+    "source_workbook_unchanged": true,
+    "prior_SNP_dispositions": {
+      "No compatible splice guide covering retained transcripts": 42,
+      "Retained in provisional 4\u20138 subset": 37,
+      "Splice guide present; no all-transcript 4\u20138 guide": 27,
+      "Outside shared splice windows in rebuilt transcript model": 15,
+      "Genotype, expression or category criterion": 3
+    }
+  }
+}

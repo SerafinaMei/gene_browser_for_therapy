@@ -1,0 +1,104 @@
+{
+  "sources": [
+    {
+      "id": "clinvar_variants",
+      "path": "DnD_project/haplo_prelim_pipeline/data/ClinVar/variant_summary.txt",
+      "title": "ClinVar variant records (GRCh38)",
+      "note": "Local variant_summary.txt; snapshot date is not recorded. Downloads retain all source columns for GRCh38 records matched by NCBI Gene ID. These records may differ from the dated gene-summary totals. No variant-level dominant inheritance assignment is supplied.",
+      "date": null,
+      "sha256": "5b3645957bd5f09591aab5ecd3b20a422cdaa82e8be9179913e265abcc8819db",
+      "bytes": 3904792091
+    },
+    {
+      "id": "targeting_variants",
+      "path": "Grace_pipeline/261011_RUN_final/mxy_local_eda/outputs/20261101_library_update/snp_list_prePAM.csv",
+      "title": "Targeting SNP records",
+      "note": "GRCh38 common SNP candidates, cell-line genotype evidence and selection flags. Each row is a variant/editor/window association. Recovered source coverage is incomplete.",
+      "date": "2026-11-01",
+      "sha256": "d3141e0d3fd802d91a7b7a9b3294306ccfee2f52cb80cf8c5d790d8de268028d",
+      "bytes": 2131406
+    },
+    {
+      "id": "targeting_guides",
+      "path": "Grace_pipeline/261011_RUN_final/mxy_local_eda/outputs/20261101_library_update/grna_detail_postNGG.csv.gz",
+      "title": "gRNA sequences and target associations",
+      "note": "NGG-compatible guides on GRCh38 plus the focal allele; neighboring variants are unphased. Guide/editor/window associations can repeat a guide. Selection and provisional editing-window flags are preserved.",
+      "date": "2026-11-01",
+      "sha256": "98dd79319488d800f87f654d5cb028890f9f595d888370ac587b72a37d0c7f2c",
+      "bytes": 443541
+    },
+    {
+      "id": "expanded_screen",
+      "path": "Grace_pipeline/pipeline_recheck_20261101/results/gene_annotations.csv",
+      "title": "Expanded indel and splice screen",
+      "note": "D&D, ClinGen HI and two additional control genes. Results are separate from the D&D reference workbook; CRISPRoff and excision were not run.",
+      "date": "2026-11-01",
+      "sha256": "f7dcf4fbb38027325fb6403cb5c2d01414b1092309719683fa01d3695d9e32c8",
+      "bytes": 437719
+    },
+    {
+      "id": "expanded_variants",
+      "path": "Grace_pipeline/pipeline_recheck_20261101/results/snps_annotated_prePAM.csv",
+      "title": "Expanded-screen SNP records",
+      "note": "Common SNPs in shared exonic and splice regions. Splice distances are 1-23 bp and 1-30 bp; AF is 0.1-0.9. These are candidate counts before cell-line expression and genotype selection.",
+      "date": "2026-11-01",
+      "sha256": "421b61d37830479280c69cfcfc1a85dd119981a8bd48685503d3a64c78c51a19",
+      "bytes": 2812885
+    },
+    {
+      "id": "expanded_guides",
+      "path": "Grace_pipeline/pipeline_recheck_20261101/results/all_guide_associations.csv.gz",
+      "title": "Expanded-screen gRNA records",
+      "note": "NGG guides with source sequence, geometry, NMD and selection flags. The primary screen uses the 10 bp SNP-to-PAM rule; broader guide records retain their filter flags.",
+      "date": "2026-11-01",
+      "sha256": "6aaead64306ccfd4cd4056c665cadfd3e01a4388b5f202115c1d4336ed8fa4d7",
+      "bytes": 720982
+    },
+    {
+      "id": "expanded_models",
+      "path": "Grace_pipeline/pipeline_recheck_20261101/inputs/pipeline_exons.csv",
+      "title": "Expanded-screen transcript models",
+      "note": "Defines assessed genes and chromosomes; absence from variant records alone is never used to infer a tested zero.",
+      "date": "2026-11-01",
+      "sha256": "091e225da812698d0f0065a444ba5a41c5c57e6adb1bb686d75aff61a9cf8d87",
+      "bytes": 8287625
+    },
+    {
+      "id": "expanded_nmd",
+      "path": "Grace_pipeline/pipeline_recheck_20261101/stage_a/indels/NMD/NMD_induction_summary.csv",
+      "title": "Expanded-screen NMD results",
+      "note": "Predictions consistent across retained transcripts. Mixed predictions need not be classified as inducing or escaping NMD.",
+      "date": "2026-11-01",
+      "sha256": "6d657c2c192b23b436c2532340fe39a647c6dcc7f90f9c5a68963efa593a5b97",
+      "bytes": 8110
+    },
+    {
+      "id": "expanded_nmd_positions",
+      "path": "Grace_pipeline/pipeline_recheck_20261101/stage_a/indels/NMD/NMD_induction_var_info.csv",
+      "title": "Expanded-screen NMD variant positions",
+      "note": "Positions with consistent NMD induction or escape across retained transcripts.",
+      "date": "2026-11-01",
+      "sha256": "945c8014566ac2f9fb91d8d099d1e933cf5d0ce7bf72ffd19f4e371a39aae741",
+      "bytes": 71797
+    },
+    {
+      "id": "expanded_nmd_exclusions",
+      "path": "Grace_pipeline/pipeline_recheck_20261101/inputs/nmd_model_exclusions.csv",
+      "title": "Expanded-screen NMD exclusions",
+      "note": "NMD cannot be evaluated when a retained transcript lacks coding coordinates.",
+      "date": "2026-11-01",
+      "sha256": "207f8716d76712177d35789935afe64da67b5cdb9d2a096274da6b5ecf062a49",
+      "bytes": 167
+    },
+    {
+      "id": "ensembl_coordinates",
+      "path": "DnD_gene_browser/data_sources/gene_coordinates.json",
+      "title": "Ensembl gene coordinates",
+      "note": "GRCh38 coordinates for SPTLC1, checked against the Ensembl gene ID. Other genes use ClinGen coordinates where supplied, or a UCSC canonical-gene search.",
+      "date": "2026-11-01",
+      "sha256": "449cfe97d329da3a33095da14e82b9fc2a4523df8e187bc8c68d5454a241eb5c",
+      "bytes": 341,
+      "url": "https://rest.ensembl.org/lookup/symbol/homo_sapiens/SPTLC1?content-type=application/json"
+    }
+  ]
+}
