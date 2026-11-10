@@ -1,0 +1,37 @@
+{
+  "checked": "2026-11-10",
+  "github_tree": "e148f96894ae2f415e2af5ef5e121c329b112125",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/main/archived_trackhubs/bed_files/all_genes_w_filtering/WTB_het.bb",
+      "git_blob_sha": "e4d535cea0aedd40aeaecbdc3f772770591edece",
+      "sha256": "b27c017d8a8781b7761336dd493eed0441610a144ee8dcea03eb0b5c1de3137b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/main/archived_trackhubs/bed_files/all_genes_w_filtering/WTC_het.bb",
+      "git_blob_sha": "dd78a0fef65d518a754a33b022f1d38e315e6f32",
+      "sha256": "3d2637d1aec70b8abeec136ba1580f410103436503f6a3d0efc6cc53e30d997e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/main/archived_trackhubs/bed_files/all_genes_w_filtering/WTD_het.bb",
+      "git_blob_sha": "853672ed1845bdccaee217b0fbc37410e359ff11",
+      "sha256": "8d683f3da8441c8ac59b55bcf62eaf2449df84c998c151dafdcc740bb7e79133"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/main/archived_trackhubs/bed_files/all_genes_w_filtering/KOLF2_het.bb",
+      "git_blob_sha": "9b74cd9736f0c2a0668c155949af09125bef453b",
+      "sha256": "eb633e821d55087f5c6cc8f9883c476b50eae138df6116a3cde51e1b9d36c07e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/main/SPTLC_genes/SPTLC_genes.bb",
+      "git_blob_sha": "e8d94cbbc3f39626b9672cac9cbe20c8cd080d6f",
+      "sha256": "67c1b979f87f231feed31ccd1ef4f069c92d0ebbfacd55b3dce875b78ac510ee"
+    },
+    {
+      "url": "https://genome.ucsc.edu/hubspace/10/gramey02/ProteinCoding_gene_editing/all_protein_coding_genes.bb",
+      "sha256": "2b150cd33fecd309f94564ccc5f85e740a1ffa91326ba7e1b6645f6e3f3f8d0b",
+      "last_modified": "2026-09-24T02:06:35Z",
+      "note": "Downloaded bytes match the existing bigBed snapshot used to produce the imported BED."
+    }
+  ]
+}

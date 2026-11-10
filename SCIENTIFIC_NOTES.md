@@ -1,3 +1,15 @@
+## Comprehensive evidence update · 2026-11-10
+
+The report now loads a separate, reproducible evidence layer built by `scripts/refresh_evidence.py`. It replaces the headline ClinVar counts with the official November 9, 2026 summary, imports current IMPC phenotype and disease records, and adds the genome-wide target track. The earlier cohort results and selected-guide downloads remain available in expandable sections. See `data_sources/comprehensive/README.txt` for source and rebuild details.
+
+Targeting covers 19,181 current HGNC entries, resolving 67 official previous symbols and adding 20 genes missing from the earlier catalog. The dedicated SPTLC1/2 track is used for those genes, with the distinct all-protein-coding dataset available separately. Counts use unique GRCh38 interval/allele keys. Cell-line intersections require the same allele pair, preserve HIGH/LOW quality, and never substitute locus-only matches. Strategy counts overlap; source PAM flags are separate from selected gRNAs. These are complete imports of the named snapshots, not a claim that the underlying research pipeline exhaustively assessed every possible variant.
+
+The mouse page shows phenotype terms, supporting datasets, allele, zygosity, life stage, sex, manual assertions, physiological systems, and named human disease associations with identifiers. Manual assertions are not treated as statistical p-values. The current PhenoDigm API does not supply phenotype matches for SPTLC1's four associated diseases, so the table says that explicitly rather than inferring matches from the pasted webpage. Historical cohort aggregates remain available separately.
+
+All 919,143 broad-track input rows are accounted for. The current IMPC API snapshot is paginated with response-count checks. SHA-256 hashes, exact source URLs, gene mappings, and cell-line mismatch counts are retained in the source/audit files. `python3 tests/test_comprehensive.py` reconciles every gene's displayed variant/quality/strategy counts with its downloadable CSV, verifies mouse snapshots, and checks current ClinVar/browse consistency.
+
+The footer is “Test version.” The requested generic evidence paragraph and old summary-count footnote have been removed. ClinGen and the historical selected-guide exports retain their explicitly dated original sources; this update does not claim those were rerun.
+
 # Scientific definitions and data coverage
 
 ## Scientific definitions

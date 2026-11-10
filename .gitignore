@@ -5,3 +5,9 @@ __pycache__/
 .DS_Store
 *.log
 *.tar.gz
+
+__pycache__/
+data_sources/comprehensive/cells/
+data_sources/comprehensive/*.bb
+data_sources/comprehensive/*.bed
+data_sources/comprehensive/genome-evidence.json.gz

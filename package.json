@@ -8,6 +8,9 @@
     "start": "python3 scripts/serve.py",
     "build:data": "python3 scripts/build_data.py",
     "build:hosting": "python3 scripts/prepare_hosting.py",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "test:data": "python3 tests/test_data.py",
+    "refresh:evidence": "python3 scripts/refresh_evidence.py --build",
+    "test:evidence": "python3 tests/test_comprehensive.py"
   }
 }

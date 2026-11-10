@@ -25,7 +25,7 @@ const main=()=>elements.get('#main').innerHTML;
 async function route(hash){location.hash=hash;await windowEvents.hashchange();return main();}
 test('initial page opens search without a preselected gene',()=>{
   assert.equal(document.body.dataset.view,'home');
-  assert.match(main(),/28,658 genes available/);
+  assert.match(main(),/28,678 genes available/);
   assert.doesNotMatch(main(),/AARS1|Dosage and constraint/);
   assert.doesNotMatch(main(),/could not load/);
 });
@@ -34,7 +34,7 @@ test('submitting a gene ID opens its report and Search returns to the home page'
   elements.get('#search-form').listeners.submit({preventDefault(){}});
   const hash=location.hash.startsWith('#')?location.hash:'#'+location.hash;
   assert.match(await route(hash),/AARS1/);
-  assert.match(main(),/1,778/);assert.match(main(),/0\.02246/);
+  const evidence=JSON.parse(await readFile(new URL('../dist/data/evidence-A.json',import.meta.url),'utf8'));assert.ok(main().includes(evidence.AARS1.clinvar.Total_alleles.toLocaleString('en-US')));assert.match(main(),/0\.02246/);
   assert.equal(document.body.dataset.view,'report');
   elements.get('#search-nav').onclick();
   await route('#view=search');
@@ -42,7 +42,7 @@ test('submitting a gene ID opens its report and Search returns to the home page'
   assert.equal(elements.get('#gene-search').value,'');
 });
 test('all report sections render for a complete record and a sparse record',async()=>{
-  for(const symbol of ['AARS1','SPTLC1'])for(const tab of ['overview','diseases','variants','mouse','raw']){
+  for(const symbol of ['AARS1','SPTLC1','SEC22B','TCAF2C'])for(const tab of ['overview','diseases','variants','mouse','raw']){
     const html=await route(`#gene=${symbol}&tab=${tab}`);
     assert.match(html,new RegExp(symbol));assert.doesNotMatch(html,/could not load|undefined|NaN/);
   }
@@ -55,7 +55,7 @@ test('stable ID URL, invalid symbol, source page and browsing render without exc
   assert.match(await route('#gene=HGNC:20'),/AARS1/);
   assert.match(await route('#gene=NO_SUCH_GENE_123'),/Gene not found/);
   assert.match(await route('#view=sources'),/GeneBayes/);
-  assert.match(await route('#view=browse'),/28,658/);
+  assert.match(await route('#view=browse'),/28,678/);
   assert.match(elements.get('#browse-results').innerHTML,/ClinVar alleles/);
 });
 test('plain evidence label, D&D membership and gene-specific Genome Tracks links',async()=>{
@@ -107,7 +107,7 @@ test('expanded strategy coverage shows HI results and distinguishes missing asse
   assert.match(html,/downloads\/expanded\/PMP22-guides.csv.gz/);
   assert.match(html,/Expanded indel\/splice screen/);
   html=await route('#gene=SPTLC1&tab=variants');
-  assert.match(html,/SPTLC1 was not included in the available targeting runs/);
+  assert.match(html,/Genome-wide targeting candidates/);assert.match(html,/KOLF2/);assert.doesNotMatch(html,/SPTLC1 was not included/);
   assert.doesNotMatch(html,/Exonic indel, before NMD assessment/);
   html=await route('#gene=MECP2&tab=variants');
   assert.match(html,/Exonic indel, before NMD assessment<\/td><td>0<\/td>/);
@@ -151,4 +151,23 @@ test('hosted reports load compressed annotation shards',async()=>{
     assert.ok(requested.includes('data/genes-B.json.gz?v=test-revision'));
     assert.ok(requested.includes('data/record-details-B.json.gz?v=test-revision'));
   } finally {globalThis.fetch=originalFetch;delete document.documentElement;}
+});
+
+test('current IMPC includes manual heterozygous embryo phenotypes and disease details',async()=>{
+  const html=await route('#gene=SPTLC1&tab=mouse');
+  for(const text of ['abnormal embryo size','embryonic growth retardation','preweaning lethality, complete penetrance','heterozygote','homozygote','E9.5','OMIM:620285','ORPHA:300605','Manually asserted; no statistical p-value'])assert.ok(html.includes(text),text);
+  assert.doesNotMatch(html,/No summary is available/);
+  documentEvents.change({target:{id:'mouse-zygosity',value:'heterozygote'}});
+  const filtered=elements.get('#mouse-phenotype-results').innerHTML;
+  assert.match(filtered,/embryonic growth retardation/);
+  assert.doesNotMatch(filtered,/preweaning lethality/);
+});
+test('requested copy cleanup and current ClinVar provenance',async()=>{
+  let html=await route('#gene=SPTLC1');
+  assert.doesNotMatch(html,/Review the evidence together|No combined haplosufficiency probability|Total: distinct ClinVar alleles/);
+  assert.equal(elements.get('#site-footer').textContent,'Test version');
+  html=await route('#gene=SPTLC1&tab=variants');
+  assert.match(html,/2026-11-09/);
+  assert.match(html,/HIGH quality/);
+  assert.match(html,/SPTLC1-genome-targets.csv/);
 });

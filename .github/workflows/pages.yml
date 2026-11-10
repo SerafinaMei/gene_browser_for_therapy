@@ -28,6 +28,8 @@ jobs:
           package-manager-cache: false
       - name: Check interface and settings
         run: node --test tests/*.test.mjs
+      - name: Verify imported evidence
+        run: python3 tests/test_comprehensive.py
       - name: Build website
         run: python3 scripts/prepare_hosting.py
       - name: Configure Pages

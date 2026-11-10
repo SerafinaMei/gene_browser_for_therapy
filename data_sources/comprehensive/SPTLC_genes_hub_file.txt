@@ -1,0 +1,55 @@
+hub SPTLC Gene Editing Opportunities
+shortLabel SPTLC Gene Editing Opportunities
+longLabel Common genetic variant hub for SPTLC 1 & 2 gene editing opportunities
+useOneFile on
+email Grace.Ramey@ucsf.edu
+
+genome hg38
+
+track CommonVar_EditingTargets
+shortLabel SPTLC 1 & 2 gene editing targets
+longLabel Mutation-agnostic and allele-specific editing sites for SPTLC 1 & 2
+visibility pack
+type bigBed
+filterValues.editStrats exon disruption,epigenetic silencing,splice site disruption,excision
+filterType.editStrats multipleListOr
+bigDataUrl https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/refs/heads/main/SPTLC_genes/SPTLC_genes.bb
+html https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/refs/heads/main/track_descriptions/dnd_track_description.html
+url https://gramey02.github.io/DnD_TrackHubs_Public/track_descriptions/dnd_track_description.html
+urlLabel View color legend and track documentation
+
+track WTB_bb
+shortLabel WTB het vars
+longLabel WTB Cell Line Heterozygous Variants
+visibility pack
+type bigBed
+filterValues.snv_qual HIGH,LOW
+filterType.snv_qual multipleListOr
+bigDataUrl https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/refs/heads/main/archived_trackhubs/bed_files/all_genes_w_filtering/WTB_het.bb
+
+track WTC_bb
+shortLabel WTC het vars
+longLabel WTC Cell Line Heterozygous Variants
+visibility pack
+type bigBed
+filterValues.snv_qual HIGH,LOW
+filterType.snv_qual multipleListOr
+bigDataUrl https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/refs/heads/main/archived_trackhubs/bed_files/all_genes_w_filtering/WTC_het.bb
+
+track WTD_bb
+shortLabel WTD het vars
+longLabel WTD Cell Line Heterozygous Variants
+visibility pack
+type bigBed
+filterValues.snv_qual HIGH,LOW
+filterType.snv_qual multipleListOr
+bigDataUrl https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/refs/heads/main/archived_trackhubs/bed_files/all_genes_w_filtering/WTD_het.bb
+
+track KOLF2_bb
+shortLabel KOLF2 het vars
+longLabel KOLF2 Cell Line Heterozygous Variants
+visibility pack
+type bigBed
+filterValues.snv_qual HIGH,LOW
+filterType.snv_qual multipleListOr
+bigDataUrl https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/refs/heads/main/archived_trackhubs/bed_files/all_genes_w_filtering/KOLF2_het.bb
