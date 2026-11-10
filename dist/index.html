@@ -10,22 +10,30 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="styles.css?v=8">
   <link rel="stylesheet" href="custom.css?v=8">
+  <link rel="stylesheet" href="shiny.css?v=1">
   <script src="app.js?v=8" type="module"></script>
 </head>
 <body data-view="home">
   <a class="skip" href="#gene-search">Skip to gene search</a>
   <header class="site-header"><div class="header-inner">
     <a href="#view=search" class="brand"><span id="site-name">D&D Gene Browser</span> <span id="site-status" class="test-label">Test version</span></a>
-    <nav class="site-nav" aria-label="Main navigation">
+    <div id="header-nav-slot"><nav class="site-nav" aria-label="Main navigation">
       <button id="search-nav" class="selected">Search</button>
       <button id="browse-nav">Browse genes</button>
       <button id="compare-nav">Compare <span id="compare-count">0</span></button>
       <button id="sources-nav">Data sources</button>
       <button id="help-button">Help</button>
-    </nav>
+    </nav></div>
+    <label class="appearance-control" for="appearance-select">Appearance
+      <select id="appearance-select"><option value="shiny">Shiny</option><option value="classic">Classic</option></select>
+    </label>
   </div></header>
   <div class="workspace">
-    <section class="search-section" aria-label="Gene search">
+    <aside id="shiny-sidebar" aria-label="Search and navigation" hidden>
+      <div id="sidebar-search-slot"></div>
+      <div id="sidebar-nav-slot"></div>
+    </aside>
+    <div id="search-slot"><section class="search-section" aria-label="Gene search">
       <div class="search-intro"><h1 id="search-heading">Search for a gene</h1><p id="search-description">Clinical annotations, dosage sensitivity, variant counts and experimental data.</p></div>
       <form id="search-form" role="search">
         <label id="search-label" class="search-label" for="gene-search">Gene symbol, name or ID</label>
@@ -37,7 +45,7 @@
       </form>
       <p id="search-help" class="search-help">Supports gene symbols, HGNC, Ensembl and NCBI Gene IDs.</p>
       <div id="search-examples" class="search-examples"><span>Examples:</span><button data-gene="AARS1">AARS1</button><button data-gene="PMP22">PMP22</button><button data-gene="SPTLC1">SPTLC1</button></div>
-    </section>
+    </section></div>
     <main id="main" tabindex="-1"><p class="home-status" role="status">Loading gene data…</p></main>
   </div>
   <footer><span id="site-footer">Test version</span><a href="#view=sources">Data sources and definitions</a></footer>

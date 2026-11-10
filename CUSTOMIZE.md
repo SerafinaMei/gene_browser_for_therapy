@@ -2,6 +2,14 @@
 
 The website is plain HTML, CSS and JavaScript. No framework or paid editor is required.
 
+## Switch appearance
+
+Use **Appearance** in the top-right corner to select **Shiny** or **Classic**. Shiny is the default; Classic retains the previous layout. The choice is saved in this browser and switching preserves the current gene and report tab.
+
+The original stylesheets remain unchanged. Shiny's sidebar, compact tables and muted colors are defined in [dist/shiny.css](dist/shiny.css); [dist/appearance.js](dist/appearance.js) handles the selector. Shiny supplies its own typography, colors and spacing, while text settings apply to both appearances.
+
+The complete version before this change is saved locally under the Git tag `style-classic-2026-11-10`. Use the selector for everyday comparisons; the tag also preserves the full original source.
+
 ## Text, colors and size
 
 Edit [dist/site-config.json](dist/site-config.json). On GitHub, open that file and select the pencil icon. On your Mac, open it in your editor or double-click `Customize Website.command`.
@@ -24,7 +32,7 @@ Use six-digit hex colors, such as `#285b88`. Keep double quotes around text and 
 
 ## Layout and detailed styling
 
-Add CSS rules to [dist/custom.css](dist/custom.css). It loads after the main stylesheet, so your overrides take precedence. Examples are included in the file. The page structure is in `dist/index.html`; report rendering is in `dist/app.js`.
+Add CSS rules to [dist/custom.css](dist/custom.css). It loads after the main stylesheet. Shiny-specific rules load afterward from `dist/shiny.css`. Examples are included in the file. The page structure is in `dist/index.html`; report rendering is in `dist/app.js`.
 
 ## Preview and publish
 

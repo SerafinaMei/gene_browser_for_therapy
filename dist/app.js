@@ -1,6 +1,8 @@
+import {initAppearance} from './appearance.js?v=1';
 import {present,fmt,esc,unpackIndex,searchGenes,flatten,csv,unpackRecordCsv,hiLabels,moiLabels,genomeUrl} from './core.js?v=6';
 import {validateSettings,applySettings,pageTitle} from './settings.js?v=8';
 const $=s=>document.querySelector(s);
+initAppearance(document,globalThis);
 let siteConfig;
 let genes=[],manifest,current=null,activeTab='overview',requestId=0,results=[],highlight=-1;
 let compare=[];
@@ -32,7 +34,18 @@ function showHome() {
   current = null;
   document.title = pageTitle(siteConfig);
   $('#gene-search').value = '';
-  $('#main').innerHTML = `<p class="home-status">${fmt(genes.length)} genes available. Data coverage varies by gene.</p>`;
+  $('#main').innerHTML = `<section class="shiny-start shiny-only">
+    <div class="start-heading"><h1>Gene browser</h1><a class="button-link" href="#view=browse">Browse genes</a></div>
+    <p class="start-instruction">Search for a gene or browse the gene list.</p>
+    <section class="panel"><div class="panel-head"><h2>Available annotations</h2></div>
+      <div class="table-scroll"><table><thead><tr><th>Section</th><th>Data</th></tr></thead><tbody>
+        <tr><td>Clinical annotations</td><td>ClinGen disease associations and dosage sensitivity</td></tr>
+        <tr><td>Constraint</td><td>GeneBayes s_het and Collins pHaplo</td></tr>
+        <tr><td>Variants and targeting</td><td>ClinVar counts, editing candidates and cell-line overlaps</td></tr>
+        <tr><td>Mouse phenotypes</td><td>IMPC phenotype terms, experimental evidence and disease associations</td></tr>
+      </tbody></table></div>
+    </section>
+  </section><p class="home-status">${fmt(genes.length)} genes available. Data coverage varies by gene.</p>`;
 }
 function resourceUrl(path){const version=document.documentElement?.dataset.buildVersion;return version?`${path}?v=${encodeURIComponent(version)}`:path;}
 async function fetchJSON(path){
