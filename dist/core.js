@@ -43,7 +43,7 @@ export function unpackRecordCsv(packet, symbol) {
   for (let i = 0; i < columns[0].length; i++) lines.push(columns.map(c => cell(c[i])).join(','));
   return '\ufeff' + lines.join('\r\n') + '\r\n';
 }
-export const hiLabels={0:'No evidence',1:'Little evidence',2:'Some evidence',3:'Sufficient evidence',30:'Autosomal recessive',40:'Dosage sensitivity unlikely'};
+export const hiLabels={0:'No',1:'Little evidence',2:'Some evidence',3:'Sufficient evidence',30:'Autosomal recessive',40:'Dosage sensitivity unlikely'};
 export const moiLabels={AD:'Autosomal dominant',AR:'Autosomal recessive',SD:'Semidominant',XL:'X-linked',XLD:'X-linked dominant',XLR:'X-linked recessive',MT:'Mitochondrial'};
 
 export function genomeUrl(g, tracks = false) {

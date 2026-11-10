@@ -61,7 +61,7 @@ test('stable ID URL, invalid symbol, source page and browsing render without exc
 test('plain evidence label, D&D membership and gene-specific Genome Tracks links',async()=>{
   let html=await route('#gene=AARS1');
   assert.match(html,/<td>D&D<\/td><td>Yes<\/td>/);
-  assert.match(html,/<td>ClinGen haploinsufficiency evidence<\/td><td>No evidence<\/td>/);
+  assert.match(html,/<td>ClinGen haploinsufficiency evidence<\/td><td>No<\/td>/);
   assert.match(html,/PMC13042096/);
   assert.doesNotMatch(html,/D&D gene set|—/);
   html=await route('#gene=PMP22');
@@ -168,7 +168,10 @@ test('requested copy cleanup and current ClinVar provenance',async()=>{
   assert.equal(elements.get('#site-footer').textContent,'Test version');
   html=await route('#gene=SPTLC1&tab=variants');
   assert.match(html,/2026-11-09/);
-  assert.match(html,/HIGH quality/);
+  assert.match(html,/>Pre-PAM<\/th>/);
+  assert.match(html,/>Post-PAM<\/th>/);
+  assert.doesNotMatch(html,/HIGH quality|LOW only/);
+  assert.match(html,/<td>WTD<\/td><td>119<\/td><td>93<\/td>/);
   assert.match(html,/SPTLC1-genome-targets.csv/);
 });
 
@@ -178,7 +181,7 @@ test('full multiallelic run is prominent and separate from the smaller genome tr
     assert.match(html,/Pipeline targeting candidates/);
     assert.ok(html.includes(`excision</td><td>${count}</td>`));
     assert.ok(html.indexOf('Pipeline targeting candidates')<html.indexOf('Genome-wide targeting candidates'));
-    assert.match(html,/RUN_MULTIALLELIC/);
+    assert.doesNotMatch(html,/RUN_MULTIALLELIC/);
     assert.match(html,new RegExp(`downloads/run-multiallelic/${gene}.csv.gz`));
   }
 });

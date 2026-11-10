@@ -18,7 +18,7 @@ test('aliases resolve and approved symbols rank before shared aliases',()=>{
 test('missing data, false and zero are distinct',()=>{
   assert.equal(present(0),true);assert.equal(present(false),true);assert.equal(present(null),false);
   assert.equal(fmt(0),'0');assert.equal(fmt(null),'Not available');
-  assert.equal(hiLabels[0],'No evidence');assert.equal(hiLabels[40],'Dosage sensitivity unlikely');
+  assert.equal(hiLabels[0],'No');assert.equal(hiLabels[40],'Dosage sensitivity unlikely');
 });
 test('CSV preserves scientific values and defuses spreadsheet formulas',()=>{
   const out=csv([['=CMD()',0,null,'a,"b"\nc',0.00083437]]);
