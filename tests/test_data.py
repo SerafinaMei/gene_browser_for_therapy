@@ -32,7 +32,7 @@ class SourceTests(unittest.TestCase):
         w.close()
 
     def test_all_clingen_assertions_preserved(self):
-        p=ROOT/'DnD_project/data/Clingen-Gene-Disease-Summary-2025-11-13.csv'
+        p=PROJECT/'data_sources/clingen-gene-validity.csv'
         with p.open() as f:
             for _ in range(4):next(f)
             rows=[r for r in csv.DictReader(f) if r['GENE ID (HGNC)'].startswith('HGNC:')]

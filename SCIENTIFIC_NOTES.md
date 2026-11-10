@@ -58,3 +58,10 @@ A zero is shown only for an assessed strategy with no candidates. Genes outside 
 
 A genome-wide extension would require another pipeline run. The [upstream pipeline](https://github.com/gramey02/dnd_project) uses configurable gene/exon inputs and SGE wrappers, with Python entry points available for local execution. The configured all-protein-coding exon input and complete phased/biallelic VCF inputs were not found in this workspace, and `qsub` is unavailable locally. GRCh38, GENCODE, GTEx and chromosome 1-22/X allele-frequency files are present, so a broader Stage A run is possible after rebuilding the gene/transcript input; a complete run of all strategies needs its remaining inputs and execution configuration. No genome-wide computation was launched during this browser update.
 
+
+
+## ClinGen validity refresh — 2026-11-10
+
+The official complete ClinGen validity export now supplies 3,730 assertions for 3,078 genes, joined by HGNC ID with no unmatched records. It replaces the 2025-11-13 validity snapshot; 847 gene records changed. SPTLC1 includes MONDO:0008086, autosomal dominant, Definitive, evaluated 2026-03-31. Gene-disease validity and dosage sensitivity remain separate sources.
+
+The source CSV is retained at `data_sources/clingen-gene-validity.csv`; its date and SHA-256 are recorded in the manifest. Run `python3 scripts/refresh_clingen.py --fetch` to download and validate a new export, replace gene disease arrays, and update source metadata and the search index. Run without `--fetch` to rebuild from the cached export. The full data builder uses the same cached validity source.

@@ -10,6 +10,7 @@ from pathlib import Path
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import openpyxl
+from refresh_clingen import CACHE as VALIDITY_CACHE, read_validity, source_metadata
 
 PROJECT = Path(__file__).resolve().parents[1]
 ROOT = PROJECT.parent
@@ -104,12 +105,9 @@ def main():
         for a in aliases:
             ALIASES[a].add(s)
 
-    p = source('validity', 'DnD_project/data/Clingen-Gene-Disease-Summary-2025-11-13.csv', 'ClinGen gene–disease validity',
-               'All assertion rows retained with disease, MOI, classification, expert panel and evaluation date.',
-               'https://search.clinicalgenome.org/kb/gene-validity', '2025-11-13')
-    for r in table(p, skip=4):
-        if not (r.get('GENE ID (HGNC)') or '').startswith('HGNC:'):
-            continue
+    validity_date, validity_rows = read_validity(VALIDITY_CACHE)
+    SOURCES.append(source_metadata(VALIDITY_CACHE, validity_date, validity_rows))
+    for r in validity_rows:
         g = gene(hgnc=r['GENE ID (HGNC)'])
         if not g:
             AUDIT['unmatched']['validity'].append(r['GENE SYMBOL']); continue

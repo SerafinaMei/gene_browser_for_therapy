@@ -185,3 +185,17 @@ test('full multiallelic run is prominent and separate from the smaller genome tr
     assert.match(html,new RegExp(`downloads/run-multiallelic/${gene}.csv.gz`));
   }
 });
+
+
+test('current ClinGen SPTLC1 association renders in summary and clinical annotations',async()=>{
+  for(const hash of ['#gene=SPTLC1','#gene=SPTLC1&tab=diseases']){
+    const html=await route(hash);
+    assert.match(html,/neuropathy, hereditary sensory and autonomic, type 1A/);
+    assert.match(html,/MONDO:0008086/);
+    assert.match(html,/Autosomal dominant \(AD\)/);
+    assert.match(html,/Definitive/);
+    assert.match(html,/2026-03-31/);
+    assert.doesNotMatch(html,/No gene-disease record/);
+  }
+  assert.match(await route('#gene=SPTLC1'),/ClinGen · 2026-11-10/);
+});

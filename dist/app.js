@@ -86,7 +86,7 @@ function overview(g) {
   ];
   const table = `<div class="table-scroll"><table class="evidence-table"><thead><tr><th>Measure</th><th>Result</th><th>Meaning</th></tr></thead><tbody>${measures.map(([label,n,definition]) => `<tr><td>${label}</td><td>${present(n) ? esc(fmt(n,4)) : missing()}</td><td>${definition}</td></tr>`).join('')}</tbody></table></div>`;
   return `${panel('Dosage and constraint', '', table, overallNote(g), more('diseases', 'Full annotations'))}
-    ${panel('ClinGen disease associations', 'ClinGen data dated 2025-11-13.', diseaseTable(g.diseases,3), g.diseases.length > 3 ? `Showing 3 of ${g.diseases.length} records. Open Clinical annotations to see all.` : '', more('diseases', 'All disease records'))}
+    ${panel('ClinGen disease associations', `ClinGen · ${esc(manifest.sources.find(s=>s.id==='validity')?.date || 'Date unavailable')}`, diseaseTable(g.diseases,3), g.diseases.length > 3 ? `Showing 3 of ${g.diseases.length} records. Open Clinical annotations to see all.` : '', more('diseases', 'All disease records'))}
     ${pmp(g)}
     <div class="two-col">
       ${panel('Variant counts', '', `<div class="panel-body">${stat('Total ClinVar variants', g.clinvar?.Total_alleles)}${stat('Dominant pathogenic / likely pathogenic variants', d.dominant_plp_mutations)}</div>`, '', more('variants', 'Count definitions'))}
