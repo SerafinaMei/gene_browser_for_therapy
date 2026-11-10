@@ -98,10 +98,13 @@ def build_mouse(genes, evidence):
         m['supporting_datasets'] = sum(len(p['support']) for p in m['phenotypes'])
     return json.loads((CACHE/'mouse-sources.json').read_text())['sources']
 
-def build_tracks(args, genes, evidence, focused=False):
+def build_tracks(args, genes, evidence, focused=False, dataset_id=None):
     # Preserve allele identity. A locus-only intersection is never a qualifying match.
-    source_id='sptlc_tracks' if focused else 'genome_tracks'
-    label='SPTLC1 / SPTLC2 published track' if focused else 'All-protein-coding UCSC track'
+    pipeline=dataset_id=='multiallelic'
+    source_id='run_multiallelic' if pipeline else 'sptlc_tracks' if focused else 'genome_tracks'
+    label='RUN_MULTIALLELIC · complete per-gene export' if pipeline else 'SPTLC1 / SPTLC2 published track' if focused else 'All-protein-coding UCSC track'
+    folder='run-multiallelic' if pipeline else 'sptlc-tracks' if focused else 'genome-tracks'
+    property_key='pipeline_targets' if pipeline else 'genome_targets'
     rows_by_gene, loci = defaultdict(list), defaultdict(list)
     unmatched = defaultdict(int)
     previous = {}
@@ -128,7 +131,7 @@ def build_tracks(args, genes, evidence, focused=False):
             r = [c[0],int(c[1]),int(c[2]),c[3].strip(),c[10],c[12],c[19],c[21],c[20],{},original_symbol]
             rows_by_gene[symbol].append(r)
             loci[(r[0],r[1],r[2])].append(r)
-    source_list = [dict(id=source_id, title=label, path=str(args.track_bed), sha256=digest(args.track_bed), date=None, url=('https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/main/SPTLC_genes/SPTLC_genes.bb' if focused else 'https://genome.ucsc.edu/hubspace/10/gramey02/ProteinCoding_gene_editing/all_protein_coding_genes.bb'), note='Lossless BED export; upstream checked 2026-11-10. Source biological snapshot date unspecified. Distinct GRCh38 chromosome/start/end/allele keys; strategies overlap. PAM flags preserved, no guide selection inferred.')]
+    source_list = [dict(id=source_id, title=label, path=str(args.track_bed), sha256=digest(args.track_bed), date=None, url=('https://github.com/gramey02/dnd_project' if pipeline else 'https://raw.githubusercontent.com/gramey02/DnD_TrackHubs_Public/main/SPTLC_genes/SPTLC_genes.bb' if focused else 'https://genome.ucsc.edu/hubspace/10/gramey02/ProteinCoding_gene_editing/all_protein_coding_genes.bb'), note=('Complete local per-gene export; reconciled to the 593-gene RUN_MULTIALLELIC summary on 2026-11-10. ' if pipeline else 'Lossless BED export; upstream checked 2026-11-10. ')+' Source biological snapshot date unspecified. Distinct GRCh38 chromosome/start/end/allele keys; strategies overlap. PAM flags preserved, no guide selection inferred.')]
     cell_audit = {}
     env = dict(os.environ, DYLD_FALLBACK_LIBRARY_PATH=str(args.bigbed_tool.parent.parent/'lib'))
     for cell in ['WTB','WTC','WTD','KOLF2']:
@@ -174,11 +177,11 @@ def build_tracks(args, genes, evidence, focused=False):
             cells.append(dict(cell_line=cell,variants=len(matched),high_quality=len(high),low_only=len(matched)-len(high),pam_high_quality=sum(r[7]=='Yes' for r in high)))
         buf=io.StringIO();writer=csv.writer(buf);writer.writerow(headers)
         for r in rows_by_gene[symbol]: writer.writerow(r[:9]+['|'.join(sorted(r[9].get(cell,[]))) for cell in ['WTB','WTC','WTD','KOLF2']]+[r[10]])
-        data=buf.getvalue().encode(); rel=f'downloads/{"sptlc-tracks" if focused else "genome-tracks"}/{symbol}.csv.gz'
+        data=buf.getvalue().encode(); rel=f'downloads/{folder}/{symbol}.csv.gz'
         dest=OUT/rel;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(gzip.compress(data,mtime=0))
         if focused and 'genome_targets' in evidence[symbol]:evidence[symbol]['other_genome_targets']=evidence[symbol]['genome_targets']
-        evidence[symbol]['genome_targets']=dict(source_id=source_id,dataset_title=label,source_symbols=sorted({r[10] for r in rows_by_gene[symbol]}),variants=len(rows),source_rows=len(rows_by_gene[symbol]),pam_variants=sum(r[7]=='Yes' for r in rows),strategies={k:len(v) for k,v in sorted(strategies.items())},cells=cells,export=dict(path=rel,rows=len(rows_by_gene[symbol]),sha256=hashlib.sha256(data).hexdigest()))
-    save_json(OUT/('data/sptlc-track-audit.json' if focused else 'data/genome-track-audit.json'),dict(source_rows=source_rows,mapped_genes=len(rows_by_gene),unmapped_genes=dict(unmatched),renamed_genes=renamed,cells=cell_audit))
+        evidence[symbol][property_key]=dict(source_id=source_id,dataset_title=label,source_symbols=sorted({r[10] for r in rows_by_gene[symbol]}),variants=len(rows),source_rows=len(rows_by_gene[symbol]),pam_variants=sum(r[7]=='Yes' for r in rows),strategies={k:len(v) for k,v in sorted(strategies.items())},cells=cells,export=dict(path=rel,rows=len(rows_by_gene[symbol]),sha256=hashlib.sha256(data).hexdigest()))
+    save_json(OUT/('data/run-multiallelic-track-audit.json' if pipeline else 'data/sptlc-track-audit.json' if focused else 'data/genome-track-audit.json'),dict(source_rows=source_rows,mapped_genes=len(rows_by_gene),unmapped_genes=dict(unmatched),renamed_genes=renamed,cells=cell_audit))
     return source_list
 
 def build_clinvar(genes, evidence):
@@ -254,11 +257,13 @@ def main():
             (CACHE/'genome-evidence.json.gz').write_bytes(gzip.compress(json.dumps(evidence,separators=(',',':')).encode(),mtime=0))
             save_json(CACHE/'tracks-sources.json',track_sources)
         if args.tracks_only:return
-        sources=build_mouse(genes,evidence)+track_sources+build_clinvar(genes,evidence)
+        from import_pipeline import build_pipeline
+        pipeline_sources=build_pipeline(args,genes,evidence,build_tracks)
+        sources=build_mouse(genes,evidence)+track_sources+build_clinvar(genes,evidence)+pipeline_sources
         shards=defaultdict(dict)
         for symbol,row in evidence.items(): shards[symbol[0] if symbol[0].isalpha() else '_'][symbol]=row
         for key in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_': save_json(OUT/f'data/evidence-{key}.json',shards[key])
-        save_json(OUT/'data/evidence-sources.json',dict(sources=sources,coverage=dict(mouse_genes=sum('mouse_current' in r for r in evidence.values()),target_genes=sum('genome_targets' in r for r in evidence.values()))))
+        save_json(OUT/'data/evidence-sources.json',dict(sources=sources,coverage=dict(mouse_genes=sum('mouse_current' in r for r in evidence.values()),target_genes=sum('genome_targets' in r or 'pipeline_targets' in r for r in evidence.values()),pipeline_genes=sum('pipeline_targets' in r for r in evidence.values()))))
         print('Built evidence for',len(evidence),'genes',flush=True)
 
 if __name__=='__main__':main()

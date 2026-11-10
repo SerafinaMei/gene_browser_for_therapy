@@ -171,3 +171,14 @@ test('requested copy cleanup and current ClinVar provenance',async()=>{
   assert.match(html,/HIGH quality/);
   assert.match(html,/SPTLC1-genome-targets.csv/);
 });
+
+test('full multiallelic run is prominent and separate from the smaller genome track',async()=>{
+  for(const [gene,count] of [['RARB','2,427'],['RYR2','2,201']]){
+    const html=await route(`#gene=${gene}&tab=variants`);
+    assert.match(html,/Pipeline targeting candidates/);
+    assert.ok(html.includes(`excision</td><td>${count}</td>`));
+    assert.ok(html.indexOf('Pipeline targeting candidates')<html.indexOf('Genome-wide targeting candidates'));
+    assert.match(html,/RUN_MULTIALLELIC/);
+    assert.match(html,new RegExp(`downloads/run-multiallelic/${gene}.csv.gz`));
+  }
+});

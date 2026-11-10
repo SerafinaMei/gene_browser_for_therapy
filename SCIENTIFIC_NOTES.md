@@ -1,3 +1,13 @@
+## Full RUN_MULTIALLELIC import · 2026-11-10
+
+The source-folder audit found a second cause of undercounting: the public all-protein-coding track is smaller than the full run for many D&D genes. RUN_MULTIALLELIC has larger excision counts for 454 genes when compared with the previously imported headline tracks (for example, RARB 2,427 versus 43 and RYR2 2,201 versus 50). This is a comparison of named datasets with different selection histories, not a rule to take the maximum across runs.
+
+`Grace_pipeline/high_coverage_result/RUN_MULTIALLELIC/summary_files/browser_tracks/per_gene_files/` contains 568 complete BEDs, totaling 135,549 variant records. Every one of the four per-strategy counts reconciles to `summary_files/dnd_summary.csv`, covering 593 genes: 568 with candidates and 25 assessed with zero candidates. The identical summary in `261011_RUN_final` was confirmed by SHA-256. The aggregate BEDs were empty or truncated and are deliberately excluded.
+
+`scripts/import_pipeline.py` validates and imports these complete per-gene files, retains GRCh38 allele identities and source names, and intersects them with the verified public cell-line tracks. The source summary, per-file hashes and validation are retained. Counts and downloads appear as RUN_MULTIALLELIC evidence. These results are prominent for assessed genes; the dedicated SPTLC1/2 track remains prominent for those two genes. Other published tracks and historical selected-guide exports remain separately labelled. No cross-run counts are summed.
+
+The GitHub code checkout contains pipeline code rather than another completed genome-wide result. The later 1,007-gene window-extension and November 4 selected-guide outputs have different transcript, window and expression criteria; their existence does not establish genome-wide completeness. Genes outside the 593-gene run still use available published tracks, with no claim that those enumerate every possible qualifying variant.
+
 ## Comprehensive evidence update · 2026-11-10
 
 The report now loads a separate, reproducible evidence layer built by `scripts/refresh_evidence.py`. It replaces the headline ClinVar counts with the official November 9, 2026 summary, imports current IMPC phenotype and disease records, and adds the genome-wide target track. The earlier cohort results and selected-guide downloads remain available in expandable sections. See `data_sources/comprehensive/README.txt` for source and rebuild details.

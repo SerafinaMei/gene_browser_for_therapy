@@ -128,6 +128,11 @@ function cellLineTable(scope) {
 }
 
 function cellLinePanel(g) {
+  if(g.pipeline_targets && g.genome_targets?.source_id==='sptlc_tracks')return publishedCellLinePanel(g)+genomeCellPanel({...g,genome_targets:g.pipeline_targets});
+  if(g.pipeline_targets)return genomeCellPanel({...g,genome_targets:g.pipeline_targets})+`<details class="additional-counts"><summary>Published-track overlaps and earlier selected-guide datasets</summary>${publishedCellLinePanel(g)}</details>`;
+  return publishedCellLinePanel(g);
+}
+function publishedCellLinePanel(g) {
   if (g.genome_targets) return genomeCellPanel(g) + (g.targeting || g.expanded_targeting ? `<details class="additional-counts"><summary>Earlier selected-guide dataset</summary>${legacyCellLinePanel(g)}</details>` : '');
   return legacyCellLinePanel(g);
 }
@@ -174,6 +179,11 @@ function strategyContent(g, dataset) {
 }
 
 function strategyPanel(g) {
+  if(g.pipeline_targets && g.genome_targets?.source_id==='sptlc_tracks')return publishedStrategyPanel(g)+genomeTargetPanel({...g,genome_targets:g.pipeline_targets});
+  if(g.pipeline_targets)return genomeTargetPanel({...g,genome_targets:g.pipeline_targets})+`<details class="additional-counts"><summary>Published tracks and earlier pipeline results</summary>${publishedStrategyPanel(g)}</details>`;
+  return publishedStrategyPanel(g);
+}
+function publishedStrategyPanel(g) {
   if (g.genome_targets) return genomeTargetPanel(g) + (g.other_genome_targets ? `<details class="additional-counts"><summary>Separate all-protein-coding track</summary>${genomeTargetPanel({...g,genome_targets:g.other_genome_targets})}${genomeCellPanel({...g,genome_targets:g.other_genome_targets})}</details>` : '') + (g.dnd || g.strategy_screen ? `<details class="additional-counts"><summary>Earlier pipeline strategy results</summary>${legacyStrategyPanel(g)}</details>` : '');
   return legacyStrategyPanel(g);
 }
@@ -185,6 +195,7 @@ function legacyStrategyPanel(g) {
 }
 
 function strategySummary(g) {
+  if(g.pipeline_targets && g.genome_targets?.source_id!=='sptlc_tracks')g={...g,genome_targets:g.pipeline_targets};
   if (g.genome_targets) return panel('Targeting evidence',esc(g.genome_targets.dataset_title),`<div class="panel-body">${stat('Distinct candidate variants',g.genome_targets.variants)}${Object.entries(g.genome_targets.strategies).map(([s,n])=>stat(s,n)).join('')}</div>`,'',more('variants','Candidates and cell lines'));
   if (!g.dnd && (!g.strategy_screen || !g.strategy_screen.assessed)) return panel('Targeting evidence', '', `<div class="empty">${g.strategy_screen ? esc(g.strategy_screen.exclusion) : 'This gene was not included in the available targeting runs.'}</div>`);
   const dataset = g.dnd ? 'reference' : 'expanded';
@@ -219,12 +230,12 @@ function legacyMouseView(g){const m=g.mouse;if(!m)return panel('Mouse phenotype 
 function genomeTargetPanel(g) {
   const t=g.genome_targets;
   if(!t)return '';
-  return panel(t.source_id==='sptlc_tracks'?'SPTLC targeting candidates':'Genome-wide targeting candidates',`${esc(t.dataset_title)} · GRCh38`,`<div class="panel-body">${stat('Distinct candidate variants',t.variants)}${stat('Variants marked PAM-targetable in source',t.pam_variants)}</div><div class="table-scroll"><table><thead><tr><th>Editing strategy</th><th>Distinct variants</th></tr></thead><tbody>${Object.entries(t.strategies).map(([s,n])=>`<tr><td>${esc(s)}</td><td>${fmt(n)}</td></tr>`).join('')}</tbody></table></div>`, `<p>Strategies overlap. These are common-variant editing candidates, not ClinVar pathogenic variants or selected gRNAs. Excision partners and source PAM flags are included in the download.</p><div class="download-row">${downloadButton(t.export,'All candidate variants and cell-line matches',`${g.symbol}-genome-targets.csv`)}${sourceLink(t.source_id)}</div>`);
+  return panel(t.source_id==='run_multiallelic'?'Pipeline targeting candidates':t.source_id==='sptlc_tracks'?'SPTLC targeting candidates':'Genome-wide targeting candidates',`${esc(t.dataset_title)} · GRCh38`,`<div class="panel-body">${stat('Distinct candidate variants',t.variants)}${stat('Variants marked PAM-targetable in source',t.pam_variants)}${present(t.excision_pairs)?stat('Excision pairs (separate from variants)',t.excision_pairs):''}</div><div class="table-scroll"><table><thead><tr><th>Editing strategy</th><th>Distinct variants</th></tr></thead><tbody>${Object.entries(t.strategies).map(([s,n])=>`<tr><td>${esc(s)}</td><td>${fmt(n)}</td></tr>`).join('')}</tbody></table></div>`, `<p>${t.source_id==='run_multiallelic'?'All per-gene variant records reconcile to the RUN_MULTIALLELIC summary. Exon-disruption candidates use the source NMD assessment. ':''}Strategies overlap. These are common-variant editing candidates, not ClinVar pathogenic variants or selected gRNAs. Excision partners and source PAM flags are included in the download.</p><div class="download-row">${downloadButton(t.export,'All candidate variants and cell-line matches',`${g.symbol}-genome-targets.csv`)}${sourceLink(t.source_id)}</div>`);
 }
 function genomeCellPanel(g) {
   const t=g.genome_targets;
   if(!t)return '';
-  return panel('Cell-line heterozygous candidates',`Allele-matched overlap · ${esc(t.dataset_title)}`,`<div class="table-scroll"><table><thead><tr><th>Cell line</th><th>All matched variants</th><th>HIGH quality</th><th>LOW only</th><th>HIGH with source PAM flag</th></tr></thead><tbody>${t.cells.map(r=>`<tr><td>${esc(r.cell_line)}</td><td>${fmt(r.variants)}</td><td>${fmt(r.high_quality)}</td><td>${fmt(r.low_only)}</td><td>${fmt(r.pam_high_quality)}</td></tr>`).join('')}</tbody></table></div>`,`<p>Matches require the same GRCh38 interval and allele pair. HIGH/LOW are the original track quality labels. A zero means no matching candidate in these tracks. Expression, phasing and selected-guide criteria have not been applied to these counts.</p><details><summary>Cell-line sources</summary>${t.cells.map(r=>sourceLink('track_'+r.cell_line,r.cell_line)).join(' · ')}</details>`);
+  return panel('Cell-line heterozygous candidates',`Allele-matched overlap · ${esc(t.dataset_title)}`,`<div class="table-scroll"><table><thead><tr><th>Cell line</th><th>All matched variants</th><th>HIGH quality</th><th>LOW only</th><th>HIGH with source PAM flag</th></tr></thead><tbody>${t.cells.map(r=>`<tr><td>${esc(r.cell_line)}</td><td>${fmt(r.variants)}</td><td>${fmt(r.high_quality)}</td><td>${fmt(r.low_only)}</td><td>${fmt(r.pam_high_quality)}</td></tr>`).join('')}</tbody></table></div>`,`<p>${t.source_id==='run_multiallelic'?'RUN_MULTIALLELIC candidates intersected with the current published cell-line tracks. ':''}Matches require the same GRCh38 interval and allele pair. HIGH/LOW are the original track quality labels. A zero means no matching candidate in these tracks. Expression, phasing and selected-guide criteria have not been applied to these counts.</p><details><summary>Cell-line sources</summary>${t.cells.map(r=>sourceLink('track_'+r.cell_line,r.cell_line)).join(' · ')}</details>`);
 }
 function mousePhenotypeTable(m,zygosity='all') {
   const rows=m.phenotypes.filter(r=>zygosity==='all'||r.zygosity===zygosity);

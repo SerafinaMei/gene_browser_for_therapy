@@ -22,8 +22,10 @@ class ComprehensiveEvidenceTests(unittest.TestCase):
         self.assertTrue(all(x['assertion_type']=='manual' for p in m['phenotypes'] for x in p['support']))
     def test_every_gene_count_matches_downloaded_alleles(self):
         checked=0
-        datasets=[(s,g[k]) for s,g in self.genes.items() for k in ['genome_targets','other_genome_targets'] if k in g]
+        datasets=[(s,g[k]) for s,g in self.genes.items() for k in ['genome_targets','other_genome_targets','pipeline_targets'] if k in g]
         for symbol,t in datasets:
+            if t['export'] is None:
+                self.assertEqual(t['variants'],0);self.assertTrue(all(n==0 for n in t['strategies'].values()));continue
             raw=gzip.decompress((OUT/t['export']['path']).read_bytes())
             self.assertEqual(hashlib.sha256(raw).hexdigest(),t['export']['sha256'],symbol)
             rows=list(csv.DictReader(raw.decode().splitlines()))
@@ -49,6 +51,20 @@ class ComprehensiveEvidenceTests(unittest.TestCase):
                 self.assertEqual(c['pam_high_quality'],sum(r['PAM_targetable']=='Yes' for r in high),symbol)
             checked+=1
         self.assertGreater(checked,18000)
+    def test_multiallelic_summary_and_all_gene_coverage(self):
+        audit=json.loads((OUT/'data/run-multiallelic-validation.json').read_text())
+        self.assertEqual(audit['status'],'PASS')
+        self.assertEqual((audit['summary_genes'],audit['genes_with_candidates'],audit['records']),(593,568,135549))
+        self.assertEqual(sum('pipeline_targets' in g for g in self.genes.values()),593)
+        self.assertEqual(self.genes['RARB']['pipeline_targets']['strategies']['excision'],2427)
+        self.assertEqual(self.genes['RYR2']['pipeline_targets']['strategies']['excision'],2201)
+        self.assertNotIn('pipeline_targets',self.genes['SPTLC1'])
+        by_source={original:g['pipeline_targets'] for g in self.genes.values() if 'pipeline_targets' in g for original in g['pipeline_targets']['source_symbols']}
+        fields={'num_indel_vars':'exon disruption','num_crisproff_vars':'epigenetic silencing','num_excision_vars':'excision','num_base_edit_snps':'splice site disruption'}
+        with (ROOT/'data_sources/comprehensive/run_multiallelic_summary.csv').open() as f:
+            for row in csv.DictReader(f):
+                for source,strategy in fields.items():self.assertEqual(by_source[row['hgnc_symbol']]['strategies'][strategy],int(float(row[source] or 0)))
+
     def test_sptlc_specific_track_regression(self):
         t=self.genes['SPTLC1']['genome_targets']
         self.assertEqual(t['variants'],434)
