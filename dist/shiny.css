@@ -1,7 +1,5 @@
 /* Optional Shiny-inspired workspace. The original stylesheets remain unchanged. */
 #search-slot,#header-nav-slot{display:contents}
-.appearance-control{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);white-space:nowrap}
-.appearance-control select{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:3px;padding:4px 7px}
 body[data-appearance="shiny"]{
   --ink:#30363b;--muted:#657078;--line:#d7dce0;--soft:#f3f5f6;--link:#326b8b;--primary:#3c718e;
   --font:"Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -11,8 +9,6 @@ body[data-appearance="shiny"] .site-header{position:sticky;top:0;z-index:40;back
 body[data-appearance="shiny"] .header-inner{max-width:none;min-height:52px;padding:0 22px;gap:16px}
 body[data-appearance="shiny"] .brand{font-size:17px;font-weight:500;color:#fff}
 body[data-appearance="shiny"] .test-label{border:0;color:#d3dfe6;font-size:11px;margin-left:12px;padding:0}
-body[data-appearance="shiny"] .appearance-control{margin-left:auto;color:#dce4e9;font-size:12px}
-body[data-appearance="shiny"] .appearance-control select{background:#fff;color:#30363b;border-color:#fff;min-width:88px}
 body[data-appearance="shiny"] .workspace,
 body[data-appearance="shiny"][data-view="home"] .workspace{
   display:grid;grid-template-columns:244px minmax(0,1fr);align-items:start;
@@ -102,7 +98,6 @@ body[data-appearance="shiny"] footer{margin-left:244px;padding:12px 30px;border-
   body[data-appearance="shiny"] .header-inner{padding:11px 15px;flex-direction:row;align-items:center;flex-wrap:wrap;gap:8px;min-height:52px}
   body[data-appearance="shiny"] .brand{font-size:15px}
   body[data-appearance="shiny"] .test-label{display:none}
-  body[data-appearance="shiny"] .appearance-control{font-size:11px}
   body[data-appearance="shiny"] .workspace,body[data-appearance="shiny"][data-view="home"] .workspace{display:block}
   body[data-appearance="shiny"] #shiny-sidebar{position:static;min-height:0;max-height:none;overflow:visible;padding:15px;border-right:0;border-bottom:1px solid #d7dce0}
   body[data-appearance="shiny"] .search-help,body[data-appearance="shiny"] .search-examples{display:none}
@@ -117,7 +112,7 @@ body[data-appearance="shiny"] footer{margin-left:244px;padding:12px 30px;border-
   body[data-appearance="shiny"] .gene-heading{flex-direction:column;gap:12px}
 }
 @media print{
-  .appearance-control,#shiny-sidebar,.shiny-start{display:none!important}
+  #shiny-sidebar{display:none!important}
   body[data-appearance="shiny"] .workspace{display:block}
   body[data-appearance="shiny"] #main{padding:0}
 }

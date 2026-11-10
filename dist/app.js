@@ -2,7 +2,7 @@ import {initAppearance} from './appearance.js?v=1';
 import {present,fmt,esc,unpackIndex,searchGenes,flatten,csv,unpackRecordCsv,hiLabels,moiLabels,genomeUrl} from './core.js?v=6';
 import {validateSettings,applySettings,pageTitle} from './settings.js?v=8';
 const $=s=>document.querySelector(s);
-const placeSearch = initAppearance(document,globalThis);
+const placeSearch = initAppearance(document);
 let siteConfig;
 let genes=[],manifest,current=null,activeTab='overview',requestId=0,results=[],highlight=-1;
 let compare=[];
@@ -245,7 +245,7 @@ function mousePhenotypeTable(m,zygosity='all') {
   const rows=m.phenotypes.filter(r=>zygosity==='all'||r.zygosity===zygosity);
   if(!rows.length)return '<div class="empty">No significant phenotype assertions in this snapshot for the selected zygosity.</div>';
   const list=xs=>[...new Set(xs.flat().filter(Boolean))].join(', ');
-  return `<div class="table-scroll"><table class="mouse-table"><thead><tr><th>Phenotype</th><th>System</th><th>Allele / zygosity</th><th>Life stage</th><th>Sex</th><th>Evidence</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.term)}<span class="secondary">${esc(r.term_id)}</span></td><td>${esc(list(r.support.map(x=>x.top_level_mp_term_name)))}</td><td>${esc(r.allele)}<span class="secondary">${esc(r.zygosity)}</span></td><td>${esc(r.life_stage||'Unspecified')}</td><td>${esc(list(r.support.map(x=>x.sex==='not_considered'?'Not assessed by sex':x.sex))||'Unspecified')}</td><td><details><summary>${r.support.length} supporting dataset${r.support.length===1?'':'s'}</summary>${r.support.map(x=>`<p><strong>${esc(x.procedure_name)}</strong><br>${esc(x.parameter_name)}<br>${esc(x.phenotyping_center)} · ${x.assertion_type==='manual'||x.statistical_method==='Supplied as data'?'Manually asserted; no statistical p-value':`p = ${esc(x.p_value??'not reported')}`}</p>`).join('')}</details></td></tr>`).join('')}</tbody></table></div>`;
+  return `<div class="table-scroll"><table class="mouse-table"><thead><tr><th>Phenotype</th><th>System</th><th>Zygosity</th><th>Life stage</th><th>Sex</th><th>Evidence</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.term)}<span class="secondary">${esc(r.term_id)}</span></td><td>${esc(list(r.support.map(x=>x.top_level_mp_term_name)))}</td><td>${esc(r.zygosity)}</td><td>${esc(r.life_stage||'Unspecified')}</td><td>${esc(list(r.support.map(x=>x.sex==='not_considered'?'Not assessed by sex':x.sex))||'Unspecified')}</td><td><details><summary>${r.support.length} supporting dataset${r.support.length===1?'':'s'}</summary>${r.support.map(x=>`<p><strong>${esc(x.procedure_name)}</strong><br>${esc(x.parameter_name)}<br>${esc(x.phenotyping_center)} · ${x.assertion_type==='manual'||x.statistical_method==='Supplied as data'?'Manually asserted; no statistical p-value':`p = ${esc(x.p_value??'not reported')}`}</p>`).join('')}</details></td></tr>`).join('')}</tbody></table></div>`;
 }
 function mouseView(g) {
   const m=g.mouse_current;

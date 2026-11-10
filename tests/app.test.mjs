@@ -25,6 +25,7 @@ const main=()=>elements.get('#main').innerHTML;
 async function route(hash){location.hash=hash;await windowEvents.hashchange();return main();}
 test('initial page opens search without a preselected gene',()=>{
   assert.equal(document.body.dataset.view,'home');
+  assert.equal(document.body.dataset.appearance,'shiny');
   assert.match(main(),/28,678 genes available/);
   assert.doesNotMatch(main(),/AARS1|Dosage and constraint/);
   assert.doesNotMatch(main(),/could not load/);
@@ -157,6 +158,8 @@ test('current IMPC includes manual heterozygous embryo phenotypes and disease de
   const html=await route('#gene=SPTLC1&tab=mouse');
   for(const text of ['abnormal embryo size','embryonic growth retardation','preweaning lethality, complete penetrance','heterozygote','homozygote','E9.5','OMIM:620285','ORPHA:300605','Manually asserted; no statistical p-value'])assert.ok(html.includes(text),text);
   assert.doesNotMatch(html,/No summary is available/);
+  assert.match(html,/<th>Zygosity<\/th>/);
+  assert.doesNotMatch(html,/Allele \/ zygosity|Sptlc1&lt;em1/);
   documentEvents.change({target:{id:'mouse-zygosity',value:'heterozygote'}});
   const filtered=elements.get('#mouse-phenotype-results').innerHTML;
   assert.match(filtered,/embryonic growth retardation/);

@@ -2,13 +2,13 @@
 
 The website is plain HTML, CSS and JavaScript. No framework or paid editor is required.
 
-## Switch appearance
+## Appearance
 
-Use **Appearance** in the top-right corner to select **Shiny** or **Classic**. Shiny is the default; Classic retains the previous layout. The choice is saved in this browser and switching preserves the current gene and report tab.
+The website uses the Shiny-style layout for all visitors, without an appearance selector. Previously saved browser preferences do not override it.
 
-The original stylesheets remain unchanged. Shiny's sidebar, compact tables and muted colors are defined in [dist/shiny.css](dist/shiny.css); [dist/appearance.js](dist/appearance.js) handles the selector. Shiny supplies its own typography, colors and spacing, while text settings apply to both appearances.
+The sidebar, compact tables and muted colors are defined in [dist/shiny.css](dist/shiny.css); [dist/appearance.js](dist/appearance.js) places the search field in the main area on the home page and in the sidebar on reports.
 
-The complete version before this change is saved locally under the Git tag `style-classic-2026-11-10`. Use the selector for everyday comparisons; the tag also preserves the full original source.
+The complete original Classic version is saved under Git tag `style-classic-2026-11-10`. The version with both selectable appearances is also preserved in the commit history.
 
 ## Text, colors and size
 

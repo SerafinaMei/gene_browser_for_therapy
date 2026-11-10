@@ -5,7 +5,7 @@ An interactive gene browser for clinical annotations, dosage sensitivity, evolut
 ## Edit the website
 
 - **Text, colors, example genes and basic sizing:** [dist/site-config.json](dist/site-config.json)
-- **Appearance:** choose Shiny or Classic from the header; your browser remembers the choice.
+- **Appearance:** the Shiny-style layout is used throughout. The previous Classic version is preserved in Git.
 - **Layout and detailed styling:** [dist/custom.css](dist/custom.css) for Classic, [dist/shiny.css](dist/shiny.css) for Shiny
 - **Instructions:** [CUSTOMIZE.md](CUSTOMIZE.md)
 
