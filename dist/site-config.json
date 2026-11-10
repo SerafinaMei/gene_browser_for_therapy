@@ -6,7 +6,7 @@
   "search_heading": "Search for a gene",
   "description": "Clinical annotations, dosage sensitivity, variant counts and experimental data.",
   "search_label": "Gene symbol, name or ID",
-  "search_placeholder": "e.g. AARS1 or HGNC:20",
+  "search_placeholder": "e.g. SPTLC1",
   "search_help": "Supports gene symbols, HGNC, Ensembl and NCBI Gene IDs.",
   "example_genes": [
     "AARS1",
