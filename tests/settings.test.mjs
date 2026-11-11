@@ -2,13 +2,14 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {validateSettings,applySettings,pageTitle} from '../dist/settings.js';
+import {unpackIndex,searchGenes} from '../dist/core.js';
 
 const original=JSON.parse(await readFile(new URL('../dist/site-config.json',import.meta.url),'utf8'));
 test('published settings are valid and example genes exist',async()=>{
   validateSettings(original);
   const index=JSON.parse(await readFile(new URL('../dist/data/index.json',import.meta.url),'utf8'));
-  const symbols=new Set(index.rows.map(r=>r[index.fields.indexOf('symbol')]));
-  for(const symbol of original.example_genes)assert.ok(symbols.has(symbol),symbol);
+  const genes=unpackIndex(index);
+  for(const query of original.example_genes)assert.equal(searchGenes(genes,query)[0]?.symbol,'SPTLC1',query);
 });
 test('custom text, hidden status and colors apply without interpreting markup',()=>{
   const config=structuredClone(original);

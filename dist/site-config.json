@@ -9,8 +9,7 @@
   "search_placeholder": "e.g. SPTLC1",
   "search_help": "Supports gene symbols, HGNC, Ensembl and NCBI Gene IDs.",
   "example_genes": [
-    "AARS1",
-    "PMP22",
+    "ENSG00000090054",
     "SPTLC1"
   ],
   "font_family": "system",
