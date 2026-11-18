@@ -65,3 +65,16 @@ A genome-wide extension would require another pipeline run. The [upstream pipeli
 The official complete ClinGen validity export now supplies 3,730 assertions for 3,078 genes, joined by HGNC ID with no unmatched records. It replaces the 2025-11-13 validity snapshot; 847 gene records changed. SPTLC1 includes MONDO:0008086, autosomal dominant, Definitive, evaluated 2026-03-31. Gene-disease validity and dosage sensitivity remain separate sources.
 
 The source CSV is retained at `data_sources/clingen-gene-validity.csv`; its date and SHA-256 are recorded in the manifest. Run `python3 scripts/refresh_clingen.py --fetch` to download and validate a new export, replace gene disease arrays, and update source metadata and the search index. Run without `--fetch` to rebuild from the cached export. The full data builder uses the same cached validity source.
+
+
+## Population haplotype coverage
+
+The Figure 5A-style plots use 1,089 completed greedy-prioritization results for 560 autosomal genes from the saved GRCh38 analysis. The importer checks completion markers, cumulative gains, matching summary totals, and identical ordered sample headers for every input VCF. The verified denominator is 2,504 individuals / 5,008 haplotypes, rather than the 5,096 haplotypes in the pasted paper excerpt. These plots describe this saved analysis and do not reproduce the paper's numerical values exactly.
+
+Blue curves count distinct covered haplotypes cumulatively, excluding homozygous genotypes. Gray dashed lines show twice the number of people heterozygous at an eligible site before PAM filtering, divided by 5,008. These are population coverage estimates, not observed patient outcomes or estimates weighted for a particular ancestry.
+
+For single-guide strategies, the red dashed model is min(number of therapies / dominant disease allele count, 1), assuming equally frequent disease alleles. Counts come from the matched 2026-08-25 analysis master, independently of current ClinVar annotations. For MYH7, the model uses 149 alleles; exon-disruption coverage is 1,206 / 5,008 (24.1%) with the first therapy and 3,344 / 5,008 (66.8%) with all eight. The pre-PAM ceiling is 3,736 / 5,008 (74.6%).
+
+Excision can reuse one guide in a new pair, so its x-axis counts unique gRNAs and has no mutation-specific comparison. Sex-chromosome results for three genes are withheld pending a ploidy-specific denominator. SPTLC1 has no saved greedy result; candidate variant and cell-line counts are not converted into a population curve.
+
+`data_sources/population-coverage.json.gz` preserves aggregate points, source CSV hashes, the master-file hash, cohort size and an ordered sample-header hash. It contains no sample identifiers or individual genotypes. `scripts/build_population_coverage.py` rebuilds standalone SVGs, gzip CSV downloads and per-gene shards. The paper is linked from each available plot; technical assumptions and data tables are collapsed by default.

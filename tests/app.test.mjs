@@ -43,7 +43,7 @@ test('submitting a gene ID opens its report and Search returns to the home page'
   assert.equal(elements.get('#gene-search').value,'');
 });
 test('all report sections render for a complete record and a sparse record',async()=>{
-  for(const symbol of ['AARS1','SPTLC1','SEC22B','TCAF2C'])for(const tab of ['overview','diseases','variants','mouse','raw']){
+  for(const symbol of ['AARS1','SPTLC1','SEC22B','TCAF2C'])for(const tab of ['overview','diseases','variants','population','mouse','raw']){
     const html=await route(`#gene=${symbol}&tab=${tab}`);
     assert.match(html,new RegExp(symbol));assert.doesNotMatch(html,/could not load|undefined|NaN/);
   }
@@ -201,4 +201,19 @@ test('current ClinGen SPTLC1 association renders in summary and clinical annotat
     assert.doesNotMatch(html,/No gene-disease record/);
   }
   assert.match(await route('#gene=SPTLC1'),/ClinGen · 2026-11-10/);
+});
+
+
+test('population coverage loads on search, switches strategies and preserves missing results',async()=>{
+  const html=await route('#gene=MYH7');
+  for(const text of ['Population coverage','5,008 haplotypes','24.1%','66.8%','MYH7-indels.svg','MYH7-indels.csv.gz'])assert.ok(html.includes(text),text);
+  assert.match(await route('#gene=MYH7&tab=population'),/population-strategy/);
+  documentEvents.change({target:{id:'population-strategy',value:'excision'}});
+  const changed=elements.get('#population-results').innerHTML;
+  assert.match(changed,/MYH7-excision.svg/);
+  assert.match(changed,/unique gRNAs/);
+  assert.doesNotMatch(changed,/dashed red model/);
+  const missing=await route('#gene=SPTLC1&tab=population');
+  assert.match(missing,/No saved population-prioritization curve/);
+  assert.doesNotMatch(missing,/<img|0.0%/);
 });

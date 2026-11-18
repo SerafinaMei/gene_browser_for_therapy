@@ -1,6 +1,6 @@
 # D&D Gene Browser
 
-An interactive gene browser for clinical annotations, dosage sensitivity, evolutionary constraint, variant records, targeting results and mouse phenotype evidence.
+An interactive gene browser for clinical annotations, dosage sensitivity, evolutionary constraint, variant records, population coverage plots, targeting results and mouse phenotype evidence.
 
 ## Edit the website
 
@@ -46,3 +46,9 @@ The build writes the deployable site to `out/`. GitHub Actions publishes only th
 Gene annotations are compressed during the build. Download bundles reconstruct the same CSV records in the browser. Current browsers are required. See [SCIENTIFIC_NOTES.md](SCIENTIFIC_NOTES.md) for source definitions and coverage limitations.
 
 The site is labelled **Test version** and includes `noindex` metadata. Anyone with its address can view it and download the data. Search-indexing directives are not access controls.
+
+## Population coverage plots
+
+Gene reports show saved greedy-prioritization curves for 560 autosomal genes, with an editing-strategy selector and SVG/CSV downloads. See MYH7 for an example. Missing curves are identified explicitly, including SPTLC1.
+
+Rebuild these plots with `python3 scripts/build_population_coverage.py` (requires Matplotlib). The committed aggregate cache is sufficient; individual genotypes are not distributed. The script docstring describes importing a new analysis. Run `python3 tests/test_population.py` to reconcile every curve and download.
