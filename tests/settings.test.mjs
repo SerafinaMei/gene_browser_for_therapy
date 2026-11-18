@@ -25,7 +25,7 @@ test('custom text, hidden status and colors apply without interpreting markup',(
   assert.equal(elements.get('#site-status').hidden,true);
   assert.equal(elements.get('#search-examples').hidden,true);
   assert.equal(style.get('--link'),'#123456');
-  assert.equal(pageTitle(config,'PMP22'),'PMP22 · My <b>Gene Browser</b>');
+  assert.equal(pageTitle(config,'PMP22'),'PMP22 | My <b>Gene Browser</b>');
 });
 test('settings reject invalid CSS, sizes and gene-button markup',()=>{
   for(const mutate of [c=>c.theme.link='red;display:none',c=>c.body_font_size=100,c=>c.content_width='wide',c=>c.example_genes=['<img src=x>'],c=>c.font_family='url(https://example.com)']) {

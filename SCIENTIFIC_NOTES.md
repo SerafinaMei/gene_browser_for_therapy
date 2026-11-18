@@ -78,3 +78,18 @@ For single-guide strategies, the red dashed model is min(number of therapies / d
 Excision can reuse one guide in a new pair, so its x-axis counts unique gRNAs and has no mutation-specific comparison. Sex-chromosome results for EIF2S3 are withheld pending a ploidy-specific denominator. SPTLC1 has no saved greedy result; candidate variant and cell-line counts are not converted into a population curve.
 
 `data_sources/population-coverage.json.gz` preserves aggregate points, source CSV hashes, the master-file hash, cohort size and an ordered sample-header hash. It contains no sample identifiers or individual genotypes. `scripts/build_population_coverage.py` rebuilds standalone SVGs, gzip CSV downloads and per-gene shards. The paper is linked from each available plot; technical assumptions and data tables are collapsed by default.
+
+
+## MYH7 coverage interpretation audit (2026-11-18)
+
+The denominator is 2,504 diploid samples multiplied by two phased chromosome copies, yielding 5,008 observed haplotypes. It is not a count of 5,008 unique sequence patterns, nor a count of affected patients. Heterozygosity describes the pair of alleles in a person, not an individual haplotype.
+
+Independent parsing of the saved MYH7 exon-disruption VCFs recovered 5 eligible common biallelic SNP positions before PAM filtering (1,868 distinct heterozygous people) and 4 positions afterward (1,672 distinct heterozygous people). The run's recorded AF_LIMIT is 0.1. Selected alleles at GRCh38 positions 23433544 (G then A), 23429785 (G then A), 23431585 (G then A), and 23415680 (C then T) add 1,206, 1,206, 243, 243, 144, 144, 79 and 79 haplotypes, respectively. These gains were recomputed from phased heterozygous calls after subtracting already covered chromosome copies.
+
+The first two guides provide alternative targeting options for opposite chromosome copies in the same 1,206 heterozygous people. They do not imply 2,412 different people or that both guides should be given to a patient. Final coverage is 3,344 / 5,008 = 66.8%; this corresponds to both chromosome copies represented among the library's alternatives in 1,672 people. A patient-specific choice needs the editing site phased to the disease-causing mutation.
+
+The curve does not test for a ClinVar pathogenic variant in the same 1000 Genomes individual or on the same chromosome copy. The number of haplotypes carrying both an eligible common heterozygous editing site and a confirmed pathogenic MYH7 allele is therefore unknown from this analysis, not zero. The historical 149 dominant disease alleles used by the red equal-frequency comparison are a separate catalogue count, not 149 carriers or haplotypes in this cohort.
+
+## OMIM relationship table availability
+
+The user-supplied FUS table provides gene MIM 137070 linked to phenotype MIM 608030 (AD, AR; key 3) and phenotype MIM 614782 (AD; key 3), at 16p11.2. The two supplied relationships were verified against the open OMIM FUS entry in the browser on 2026-11-18. The source cache records provenance and verification date, not an OMIM release date. The UCSC OMIM phenotype API returned protected-data status on that date. An authorized genemap2 export is required to populate other genes with these exact fields. Until imported, missing records are displayed as not imported, never as no OMIM disease association.

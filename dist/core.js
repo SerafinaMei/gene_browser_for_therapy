@@ -1,6 +1,6 @@
 export const present = v => v !== null && v !== undefined && v !== '';
 export const fmt = (v, digits = 3) => !present(v) ? 'Not available' : typeof v === 'number' ? (Number.isInteger(v) ? v.toLocaleString('en-US') : v.toLocaleString('en-US', {maximumSignificantDigits:digits})) : String(v);
-export const esc = v => String(v ?? '').replace(/[\u2013\u2014]/g, '-').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const esc = v => String(v ?? '').replace(/\u00b7/g, '/').replace(/[\u2013\u2014]/g, '-').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function unpackIndex(data) { return data.rows.map(row => Object.fromEntries(data.fields.map((f,i) => [f,row[i]]))); }
 export function searchGenes(genes, input, limit=12) {
   const q = input.trim().toUpperCase().replace(/^(ENSG\d+)\.\d+$/, '$1');

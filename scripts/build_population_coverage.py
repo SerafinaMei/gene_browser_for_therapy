@@ -57,7 +57,7 @@ def import_run(root,master_path):
         if symbol in master:
             assert master[symbol]['dominant_mutation_count']==r['dominant_mutation_count']
         master[symbol]=r
-    result={'genes':{},'excluded':{},'sources':{'run':str(root),'master':str(master_path),'master_sha256':sha(master_path)},'cohort':'1000 Genomes · GRCh38','baseline_date':'2026-08-25'}
+    result={'genes':{},'excluded':{},'sources':{'run':str(root),'master':str(master_path),'master_sha256':sha(master_path)},'cohort':'1000 Genomes - GRCh38','baseline_date':'2026-08-25'}
     cohort=None
     for folder in ['non_excision_guides','excision_guides']:
         parent=root/'summary_files/cross_strat_gRNAs'/folder
@@ -108,7 +108,7 @@ def draw(symbol,strategy,g,series,total,path):
     ax.axhline(series['possible']/total*100,color='#737b82',ls='--',lw=1.4,label='Heterozygous coverage before PAM filtering')
     if g['dominant_mutations'] and strategy!='excision':
         ax.plot(x,[min(k/g['dominant_mutations'],1)*100 for k in x],color='#b34e4e',ls='--',lw=1.7,label='Mutation-specific model (equal-frequency alleles)')
-    ax.set(xlim=(0,max(x)),ylim=(0,102),xlabel='Number of prioritized gRNAs' if strategy=='excision' else 'Number of prioritized therapies (one gRNA each)',ylabel='Cohort haplotypes covered (%)',title=f'{symbol} · {LABELS[strategy]}')
+    ax.set(xlim=(0,max(x)),ylim=(0,102),xlabel='Number of prioritized gRNAs' if strategy=='excision' else 'Number of prioritized therapies (one gRNA each)',ylabel='Cohort haplotypes covered (%)',title=f'{symbol}: {LABELS[strategy]}')
     ax.xaxis.set_major_locator(MaxNLocator(nbins=10,integer=True));ax.set_yticks([0,20,40,60,80,100]);ax.grid(axis='y',color='#e4e8eb',lw=.7);ax.set_axisbelow(True)
     ax.legend(loc='upper left',bbox_to_anchor=(0,1.23),frameon=False,fontsize=8,ncols=1)
     fig.savefig(path,format='svg',metadata={'Date':None,'Description':f'{total} haplotypes; saved greedy prioritization results.'})

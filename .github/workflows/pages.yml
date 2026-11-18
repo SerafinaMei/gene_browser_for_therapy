@@ -33,6 +33,7 @@ jobs:
           python3 tests/test_comprehensive.py
           python3 tests/test_clingen.py
           python3 tests/test_population.py
+          python3 tests/test_omim.py
       - name: Build website
         run: python3 scripts/prepare_hosting.py
       - name: Configure Pages

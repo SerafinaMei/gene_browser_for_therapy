@@ -56,7 +56,8 @@ test('stable ID URL, invalid symbol, source page and browsing render without exc
   assert.match(await route('#gene=HGNC:20'),/AARS1/);
   assert.match(await route('#gene=NO_SUCH_GENE_123'),/Gene not found/);
   assert.match(await route('#view=sources'),/GeneBayes/);
-  assert.match(await route('#view=browse'),/28,678/);
+  await route('#view=browse');
+  assert.match(elements.get('#browse-results').innerHTML,/28,678/);
   assert.match(elements.get('#browse-results').innerHTML,/ClinVar alleles/);
 });
 test('plain evidence label, D&D membership and gene-specific Genome Tracks links',async()=>{
@@ -106,7 +107,7 @@ test('expanded strategy coverage shows HI results and distinguishes missing asse
   assert.match(html,/Exonic indel, predicted NMD<\/td><td>0<\/td>/);
   assert.match(html,/Not run in this dataset/);
   assert.match(html,/downloads\/expanded\/PMP22-guides.csv.gz/);
-  assert.match(html,/Expanded indel\/splice screen/);
+  assert.doesNotMatch(html,/Expanded indel\/splice screen/);
   html=await route('#gene=SPTLC1&tab=variants');
   assert.match(html,/Genome-wide targeting candidates/);assert.match(html,/KOLF2/);assert.doesNotMatch(html,/SPTLC1 was not included/);
   assert.doesNotMatch(html,/Exonic indel, before NMD assessment/);
@@ -200,7 +201,7 @@ test('current ClinGen SPTLC1 association renders in summary and clinical annotat
     assert.match(html,/2026-03-31/);
     assert.doesNotMatch(html,/No gene-disease record/);
   }
-  assert.match(await route('#gene=SPTLC1'),/ClinGen · 2026-11-10/);
+  assert.doesNotMatch(await route('#gene=SPTLC1'),/ClinGen [^<]*2026-11-10/);
 });
 
 
@@ -227,4 +228,22 @@ test('NEFL and MIR96 show autosomal population plots, not a sex-chromosome exclu
     documentEvents.change({target:{id:'population-strategy',value:'excision'}});
     assert.match(elements.get('#population-results').innerHTML,new RegExp(gene+'-excision.svg'));
   }
+});
+
+
+test('OMIM renders phenotype IDs and inheritance separately from gene entry links',async()=>{
+  const html=await route('#gene=FUS&tab=diseases');
+  for(const text of ['OMIM Gene-Phenotype Relationships','16p11.2','Amyotrophic lateral sclerosis 6','Essential tremor, hereditary, 4','608030','614782','AD, AR','Phenotype mapping key','View Clinical Synopses'])assert.ok(html.includes(text),text);
+  assert.doesNotMatch(html,/OMIM &amp; disease context|CMT-labelled ClinGen assertions|No PMP22-specific assignment/);
+  assert.match(await route('#gene=SPTLC1&tab=diseases'),/Gene-phenotype records have not been imported/);
+});
+
+test('report headings have no small subtitles or middle-dot separators',async()=>{
+  for(const gene of ['FUS','MYH7','SPTLC1'])for(const tab of ['overview','diseases','variants','population','mouse','raw']){
+    const html=await route(`#gene=${gene}&tab=${tab}`);
+    assert.doesNotMatch(html,/·|<h2>[^<]*<\/h2><p>/,gene+' '+tab);
+  }
+  assert.match(await route('#gene=MYH7&tab=population'),/<h2>1000Genomes Population Coverage<\/h2>/);
+  assert.match(await route('#gene=SPTLC1&tab=mouse'),/<h2>IMPC Mouse phenotypes<\/h2>/);
+  for(const page of ['sources','browse'])assert.doesNotMatch(await route('#view='+page),/·|class="subheading"/);
 });

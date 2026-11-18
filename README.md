@@ -52,3 +52,16 @@ The site is labelled **Test version** and includes `noindex` metadata. Anyone wi
 Gene reports show saved greedy-prioritization curves for 562 autosomal genes, with an editing-strategy selector and SVG/CSV downloads. See MYH7 for an example. Missing curves are identified explicitly, including SPTLC1.
 
 Rebuild these plots with `python3 scripts/build_population_coverage.py` (requires Matplotlib). The committed aggregate cache is sufficient; individual genotypes are not distributed. The script docstring describes importing a new analysis. Run `python3 tests/test_population.py` to reconcile every curve and download.
+
+## OMIM phenotype relationships
+
+Clinical annotations now have an OMIM Gene-Phenotype Relationships table with phenotype MIM IDs, inheritance and mapping keys. The initial cache contains only the FUS rows supplied by the user and verified against the OMIM entry on 2026-11-18. Other genes are explicitly marked as not imported; ClinGen assertions are not relabelled as OMIM records.
+
+To populate the table from an authorized OMIM export:
+
+```sh
+python3 scripts/build_omim_relationships.py --genemap2 /path/to/genemap2.txt --source-date YYYY-MM-DD
+python3 tests/test_omim.py
+```
+
+The importer joins by gene MIM ID and preserves disease MIM IDs and OMIM qualifiers separately. Source dates remain in Data sources; panel subtitles are omitted throughout the interface.

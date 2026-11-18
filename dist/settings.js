@@ -26,7 +26,7 @@ export function validateSettings(config) {
 }
 
 export function pageTitle(config, page='') {
-  return [page, config.title, config.status_label].filter(Boolean).join(' · ');
+  return [page, config.title, config.status_label].filter(Boolean).join(' | ');
 }
 
 export function applySettings(config, document) {
@@ -40,7 +40,7 @@ export function applySettings(config, document) {
   setText('#search-description', config.description);
   setText('#search-label', config.search_label);
   setText('#search-help', config.search_help);
-  setText('#site-footer', [config.organization,config.status_label,config.footer_note].filter(Boolean).join(' · '));
+  setText('#site-footer', [config.organization,config.status_label,config.footer_note].filter(Boolean).join(' | '));
   document.querySelector('#gene-search')?.setAttribute('placeholder',config.search_placeholder);
   document.querySelector('meta[name="description"]')?.setAttribute('content',config.description);
   const examples=document.querySelector('#search-examples');
