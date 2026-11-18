@@ -217,3 +217,14 @@ test('population coverage loads on search, switches strategies and preserves mis
   assert.match(missing,/No saved population-prioritization curve/);
   assert.doesNotMatch(missing,/<img|0.0%/);
 });
+
+
+test('NEFL and MIR96 show autosomal population plots, not a sex-chromosome exclusion',async()=>{
+  for(const gene of ['NEFL','MIR96']){
+    const html=await route(`#gene=${gene}&tab=population`);
+    assert.match(html,new RegExp(gene+'-CRISPRoff.svg'));
+    assert.doesNotMatch(html,/Sex-chromosome|No saved population/);
+    documentEvents.change({target:{id:'population-strategy',value:'excision'}});
+    assert.match(elements.get('#population-results').innerHTML,new RegExp(gene+'-excision.svg'));
+  }
+});

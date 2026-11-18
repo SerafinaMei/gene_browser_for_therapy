@@ -5,10 +5,15 @@ import hashlib
 import json
 from pathlib import Path
 import unittest
+import importlib.util
+import tempfile
 
 PROJECT = Path(__file__).resolve().parents[1]
 DIST = PROJECT/'dist'
 CACHE = PROJECT/'data_sources/population-coverage.json.gz'
+spec=importlib.util.spec_from_file_location('population_builder',PROJECT/'scripts/build_population_coverage.py')
+builder=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(builder)
 with gzip.open(CACHE,'rt') as f:
     SOURCE = json.load(f)
 RECORDS = {}
@@ -23,9 +28,9 @@ BY_ID = {g['hgnc_id']:s for s,g in GENES.items()}
 class PopulationTests(unittest.TestCase):
     def test_cohort_and_missingness(self):
         self.assertEqual((SOURCE['samples'],SOURCE['haplotypes']),(2504,5008))
-        self.assertEqual(len(SOURCE['genes']),560)
-        self.assertEqual(sum(len(g['strategies']) for g in SOURCE['genes'].values()),1089)
-        self.assertEqual(len(SOURCE['excluded']),3)
+        self.assertEqual(len(SOURCE['genes']),562)
+        self.assertEqual(sum(len(g['strategies']) for g in SOURCE['genes'].values()),1093)
+        self.assertEqual(set(SOURCE['excluded']),{'EIF2S3'})
         self.assertNotIn('SPTLC1',RECORDS)
         for gene in SOURCE['excluded']:
             self.assertNotIn('strategies',RECORDS[gene]['population_coverage'])
@@ -34,6 +39,31 @@ class PopulationTests(unittest.TestCase):
         manifest=json.loads((DIST/'data/manifest.json').read_text())
         provenance=next(s for s in manifest['sources'] if s['id']=='population_coverage')
         self.assertEqual(provenance['sha256'],hashlib.sha256(CACHE.read_bytes()).hexdigest())
+
+    def test_chromosome_metadata_is_required_and_matches_gene_coordinates(self):
+        for value in ['',None,'chrUn']:
+            with self.assertRaises(ValueError):builder.normalize_chromosome(value)
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'test.vcf'
+            path.write_text('#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tsample1\n8\t24956691\t.\tG\tT\t.\tPASS\t.\tGT\t0|1\n')
+            cohort,chromosome=builder.vcf_metadata(path)
+            self.assertEqual(chromosome,'chr8')
+            self.assertEqual(cohort[0],1)
+        for gene in SOURCE['genes'].values():
+            symbol=BY_ID[gene['hgnc_id']]
+            coordinates=GENES[symbol].get('coordinates')
+            if coordinates:
+                self.assertEqual(gene['chromosome'],builder.normalize_chromosome(coordinates.split(':')[0]),symbol)
+        for symbol in SOURCE['excluded']:
+            self.assertIn(GENES[symbol]['cytoband'][0],['X','Y'])
+
+    def test_nefl_and_mir96_have_their_saved_autosomal_results(self):
+        for symbol,chromosome,epigenetic,excision in [('NEFL','chr8',2368,3844),('MIR96','chr7',1878,4318)]:
+            self.assertEqual(SOURCE['genes'][symbol]['chromosome'],chromosome)
+            gene=RECORDS[symbol]['population_coverage']
+            self.assertEqual(set(gene['strategies']),{'CRISPRoff','excision'})
+            self.assertEqual(gene['strategies']['CRISPRoff']['points'][-1]['covered'],epigenetic)
+            self.assertEqual(gene['strategies']['excision']['points'][-1]['covered'],excision)
 
     def test_all_curves_and_downloads_preserve_source_values(self):
         for source_gene in SOURCE['genes'].values():

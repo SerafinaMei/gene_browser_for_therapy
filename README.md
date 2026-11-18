@@ -49,6 +49,6 @@ The site is labelled **Test version** and includes `noindex` metadata. Anyone wi
 
 ## Population coverage plots
 
-Gene reports show saved greedy-prioritization curves for 560 autosomal genes, with an editing-strategy selector and SVG/CSV downloads. See MYH7 for an example. Missing curves are identified explicitly, including SPTLC1.
+Gene reports show saved greedy-prioritization curves for 562 autosomal genes, with an editing-strategy selector and SVG/CSV downloads. See MYH7 for an example. Missing curves are identified explicitly, including SPTLC1.
 
 Rebuild these plots with `python3 scripts/build_population_coverage.py` (requires Matplotlib). The committed aggregate cache is sufficient; individual genotypes are not distributed. The script docstring describes importing a new analysis. Run `python3 tests/test_population.py` to reconcile every curve and download.
