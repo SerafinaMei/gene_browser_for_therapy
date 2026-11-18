@@ -99,7 +99,7 @@ function overview(g) {
 }
 function omimRelationships(g) {
   const imported=g.omim_relationships, rows=imported?.records || [];
-  const entries=g.omim_ids.map(id=>ext(`https://omim.org/entry/${id}`,`OMIM ${esc(id)}`)).join(' ');
+  const entries=[...new Set([...g.omim_ids,...(imported?.gene_mim_ids||[])])].map(id=>ext(`https://omim.org/entry/${id}`,`OMIM ${esc(id)}`)).join(' ');
   const ids=[...new Set(rows.map(r=>r.phenotype_mim).filter(Boolean))];
   const synopses=ids.length?ext(`https://omim.org/clinicalSynopsis/table?mimNumber=${ids.join(',')}`,'View Clinical Synopses'):'';
   const body=rows.length?`<div class="table-scroll"><table><thead><tr><th>Location</th><th>Phenotype</th><th>Phenotype MIM number</th><th>Inheritance</th><th>Phenotype mapping key</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.location||g.cytoband||'Not available')}</td><td>${esc(r.phenotype)}</td><td>${r.phenotype_mim?ext(`https://omim.org/entry/${r.phenotype_mim}`,esc(r.phenotype_mim)):'Not assigned'}</td><td>${esc(r.inheritance||'Not specified')}</td><td>${r.mapping_key}</td></tr>`).join('')}</tbody></table></div>`:`<div class="empty">${imported?'No phenotype relationship in the imported record.':'Gene-phenotype records have not been imported for this gene.'}</div>`;

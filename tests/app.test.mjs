@@ -233,9 +233,15 @@ test('NEFL and MIR96 show autosomal population plots, not a sex-chromosome exclu
 
 test('OMIM renders phenotype IDs and inheritance separately from gene entry links',async()=>{
   const html=await route('#gene=FUS&tab=diseases');
-  for(const text of ['OMIM Gene-Phenotype Relationships','16p11.2','Amyotrophic lateral sclerosis 6','Essential tremor, hereditary, 4','608030','614782','AD, AR','Phenotype mapping key','View Clinical Synopses'])assert.ok(html.includes(text),text);
+  for(const text of ['OMIM Gene-Phenotype Relationships','16p11.2','Amyotrophic lateral sclerosis 6','Essential tremor, hereditary, 4','608030','614782','Autosomal dominant, Autosomal recessive','Phenotype mapping key','View Clinical Synopses'])assert.ok(html.includes(text),text);
   assert.doesNotMatch(html,/OMIM &amp; disease context|CMT-labelled ClinGen assertions|No PMP22-specific assignment/);
-  assert.match(await route('#gene=SPTLC1&tab=diseases'),/Gene-phenotype records have not been imported/);
+  for(const gene of ['SPTLC1','NEFL','MYH7','CCDC9']) {
+    const html=await route(`#gene=${gene}&tab=diseases`);
+    assert.match(html,/View Clinical Synopses/);
+    assert.doesNotMatch(html,/Gene-phenotype records have not been imported/);
+  }
+  assert.match(await route('#gene=SPTLC1&tab=diseases'),/620285/);
+  assert.match(await route('#gene=CCDC9&tab=diseases'),/OMIM 621741/);
 });
 
 test('report headings have no small subtitles or middle-dot separators',async()=>{

@@ -55,7 +55,7 @@ Rebuild these plots with `python3 scripts/build_population_coverage.py` (require
 
 ## OMIM phenotype relationships
 
-Clinical annotations now have an OMIM Gene-Phenotype Relationships table with phenotype MIM IDs, inheritance and mapping keys. The initial cache contains only the FUS rows supplied by the user and verified against the OMIM entry on 2026-11-18. Other genes are explicitly marked as not imported; ClinGen assertions are not relabelled as OMIM records.
+Clinical annotations now have an OMIM Gene-Phenotype Relationships table with phenotype MIM IDs, inheritance and mapping keys. The 2026-11-18 genemap2 export supplies 7,801 phenotype relationships across 5,127 browser genes. In total 17,660 genes match an OMIM entry, including entries without a phenotype relationship. Matching uses gene MIM IDs, with a unique Entrez ID plus a matching symbol or alias as fallback. Unmatched loci are recorded in `data_sources/omim-join-audit.json`; ClinGen assertions are not relabelled as OMIM records.
 
 To populate the table from an authorized OMIM export:
 

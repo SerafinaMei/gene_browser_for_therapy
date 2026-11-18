@@ -92,4 +92,8 @@ The curve does not test for a ClinVar pathogenic variant in the same 1000 Genome
 
 ## OMIM relationship table availability
 
-The user-supplied FUS table provides gene MIM 137070 linked to phenotype MIM 608030 (AD, AR; key 3) and phenotype MIM 614782 (AD; key 3), at 16p11.2. The two supplied relationships were verified against the open OMIM FUS entry in the browser on 2026-11-18. The source cache records provenance and verification date, not an OMIM release date. The UCSC OMIM phenotype API returned protected-data status on that date. An authorized genemap2 export is required to populate other genes with these exact fields. Until imported, missing records are displayed as not imported, never as no OMIM disease association.
+The supplied `OMIMgenemap2.txt` was generated on 2026-11-18. Its full parsed relationship records, source gene identifiers and original SHA-256 are cached in `data_sources/omim-gene-phenotypes.json`. This replaces the initial FUS-only table.
+
+The import maps 17,660 browser genes to OMIM entries; 5,127 have phenotype relationships, yielding 7,801 displayed gene-phenotype rows. Gene MIM numbers and phenotype MIM numbers remain separate. Gene MIM IDs provide the primary join. A unique Entrez ID plus an agreeing approved symbol or recorded alias recovers 295 additional OMIM entry assignments, including nine additional genes with phenotype relationships. No association is inferred from genomic proximity or a similar disease name.
+
+The join audit records fallback assignments, any identifier conflicts and unmatched phenotype-bearing MIM entries. Many unmatched entries describe loci, intervals or syndromes without a specific gene assignment. Genes matched to an entry with no phenotype record are distinguished from genes without an imported entry. OMIM qualifiers (`?`, `{}`, `[]`), inheritance strings, cytogenetic locations and mapping keys are preserved exactly. Source dates remain available in Data sources.
