@@ -3,7 +3,15 @@ name: Deploy gene browser
 on:
   push:
     branches: [main]
+  schedule:
+    # Tuesday after ClinVar's Monday release; GitHub schedules use UTC.
+    - cron: '23 10 * * 2'
   workflow_dispatch:
+    inputs:
+      refresh_data:
+        description: Refresh ClinGen and ClinVar before publishing
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -14,9 +22,11 @@ concurrency:
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     permissions:
-      contents: read
+      contents: write
       pages: read
     steps:
       - name: Check out repository
@@ -26,6 +36,16 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install plot renderer
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh_data)
+        run: python3 -m pip install matplotlib==3.11.2
+      - name: Refresh official clinical sources
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh_data)
+        run: python3 scripts/refresh_weekly.py --work-dir "$RUNNER_TEMP/clinical-refresh"
       - name: Check interface and settings
         run: node --test tests/*.test.mjs
       - name: Verify imported evidence
@@ -34,8 +54,19 @@ jobs:
           python3 tests/test_clingen.py
           python3 tests/test_population.py
           python3 tests/test_omim.py
+          python3 tests/test_dominant.py
       - name: Build website
         run: python3 scripts/prepare_hosting.py
+      - name: Save validated weekly snapshot
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.refresh_data)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist data_sources
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh weekly ClinGen and ClinVar evidence"
+            git push origin HEAD:main
+          fi
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload website

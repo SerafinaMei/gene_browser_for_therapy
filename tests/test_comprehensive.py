@@ -77,5 +77,8 @@ class ComprehensiveEvidenceTests(unittest.TestCase):
         for r in idx['rows']:
             g=self.genes.get(r[cols.index('symbol')],{})
             if 'clinvar_date' in g:self.assertEqual(r[cols.index('clinvar_total')],(g['clinvar'] or {}).get('Total_alleles'))
-        self.assertEqual(self.genes['SPTLC1']['clinvar_date'],'2026-11-09')
+        from datetime import datetime
+        with (ROOT/'data_sources/comprehensive/clinvar_gene_summary.txt').open() as f:
+            release=datetime.strptime(next(f).strip().split('dated ')[1], '%B %d, %Y').date().isoformat()
+        self.assertEqual(self.genes['SPTLC1']['clinvar_date'],release)
 if __name__=='__main__':unittest.main()

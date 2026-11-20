@@ -65,3 +65,23 @@ python3 tests/test_omim.py
 ```
 
 The importer joins by gene MIM ID and preserves disease MIM IDs and OMIM qualifiers separately. Source dates remain in Data sources; panel subtitles are omitted throughout the interface.
+
+## Weekly clinical refresh
+
+The Pages workflow refreshes clinical data each **Tuesday at 10:23 UTC** (2:23 am Pacific standard time, 3:23 am Pacific daylight time). GitHub may delay scheduled jobs. The schedule becomes active once the workflow is pushed to the repository's default `main` branch. **Actions > Deploy gene browser > Run workflow** also refreshes by default; uncheck **Refresh ClinGen and ClinVar before publishing** to deploy the committed snapshot only.
+
+The refresh downloads the official ClinGen gene–disease validity export, ClinVar gene summary, and complete weekly ClinVar VCV XML. It verifies the XML checksum, rejects incomplete/stale inputs, rebuilds current dominant P/LP counts, then runs the tests and hosting build. Only successful validation permits a snapshot commit and deployment. A refresh failure leaves the live site on its last successful release; check the failed Actions run for details. GitHub can disable schedules on public repositories after 60 days without activity; re-enable the workflow in Actions if needed.
+
+Current dominant counts are a **mapped subset**, not a complete catalog of all dominant mutations. Each distinct single-gene AlleleID must have P/LP germline classifications with assertion criteria at both variant and variant–condition levels, plus dominant inheritance linked to the same condition. Inheritance comes from qualifying ClinVar submissions or exact condition-ID matches to ClinGen (Moderate/Strong/Definitive) or OMIM (mapping key 3). Mixed and missing inheritance are reported separately. Multigene structural alleles, compound haplotype/genotype records, conflicting classifications and assertions without criteria do not qualify. Counts can decrease after reclassification. The **Dominant assessment** download records the included/unresolved variant–condition rows and their evidence; an allele can have more than one condition row but is counted once per gene.
+
+OMIM stays at the supplied export date until a new authorized export is imported. Dosage sensitivity, editing candidates, cell lines, IMPC and the saved 1000 Genomes analysis are not refreshed by this job. Original D&D counts remain under Additional counts. Population plots default to a mutation-specific comparison using the current mapped dominant count; choose Original analysis to restore the earlier comparison. Only this equal-frequency model is recalculated: the measured cohort coverage, selected guides and original plots stay unchanged. All source dates and count definitions are available under Data sources.
+
+To run the same refresh locally (several GB of downloads and temporary disk space):
+
+```sh
+python3 -m pip install matplotlib==3.11.2
+python3 scripts/refresh_weekly.py
+python3 tests/test_dominant.py
+```
+
+The complete VCV XML stays in the temporary work directory and is not committed or served. The repository stores only the relevant per-gene assessments and source hashes. Workflow commits use the repository's `GITHUB_TOKEN`; no personal token is needed. Repository rules must permit these snapshot commits to `main`. Because successful refreshes commit updated snapshots, fetch and pull `main` before pushing later local edits.

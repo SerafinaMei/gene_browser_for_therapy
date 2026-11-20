@@ -171,7 +171,8 @@ test('requested copy cleanup and current ClinVar provenance',async()=>{
   assert.doesNotMatch(html,/Review the evidence together|No combined haplosufficiency probability|Total: distinct ClinVar alleles/);
   assert.equal(elements.get('#site-footer').textContent,'Test version');
   html=await route('#gene=SPTLC1&tab=variants');
-  assert.match(html,/2026-11-09/);
+  const snapshot=JSON.parse(await readFile(new URL('../dist/data/evidence-S.json',import.meta.url),'utf8')).SPTLC1;
+  assert.ok(html.includes(snapshot.clinvar_date));
   assert.match(html,/>Pre-PAM<\/th>/);
   assert.match(html,/>Post-PAM<\/th>/);
   assert.doesNotMatch(html,/HIGH quality|LOW only/);
@@ -191,24 +192,30 @@ test('full multiallelic run is prominent and separate from the smaller genome tr
 });
 
 
-test('current ClinGen SPTLC1 association renders in summary and clinical annotations',async()=>{
+test('current ClinGen SPTLC1 associations render from the refreshed snapshot',async()=>{
+  const gene=JSON.parse(await readFile(new URL('../dist/data/genes-S.json',import.meta.url),'utf8')).SPTLC1;
   for(const hash of ['#gene=SPTLC1','#gene=SPTLC1&tab=diseases']){
     const html=await route(hash);
-    assert.match(html,/neuropathy, hereditary sensory and autonomic, type 1A/);
-    assert.match(html,/MONDO:0008086/);
-    assert.match(html,/Autosomal dominant \(AD\)/);
-    assert.match(html,/Definitive/);
-    assert.match(html,/2026-03-31/);
+    for(const record of gene.diseases){
+      assert.ok(html.includes(record['DISEASE ID (MONDO)']));
+      assert.ok(html.includes(record['CLASSIFICATION']));
+      assert.ok(html.includes(record['CLASSIFICATION DATE'].slice(0,10)));
+    }
     assert.doesNotMatch(html,/No gene-disease record/);
   }
-  assert.doesNotMatch(await route('#gene=SPTLC1'),/ClinGen [^<]*2026-11-10/);
 });
 
 
 test('population coverage loads on search, switches strategies and preserves missing results',async()=>{
   const html=await route('#gene=MYH7');
-  for(const text of ['Population coverage','5,008 haplotypes','24.1%','66.8%','MYH7-indels.svg','MYH7-indels.csv.gz'])assert.ok(html.includes(text),text);
+  for(const text of ['Population coverage','5,008 haplotypes','24.1%','66.8%','MYH7-indels-current.svg','MYH7-indels-current.csv.gz'])assert.ok(html.includes(text),text);
   assert.match(await route('#gene=MYH7&tab=population'),/population-strategy/);
+  document.querySelector('#population-strategy').value='indels';
+  documentEvents.change({target:{id:'population-baseline',value:'original'}});
+  assert.match(elements.get('#population-results').innerHTML,/MYH7-indels.svg/);
+  assert.match(elements.get('#population-results').innerHTML,/149 dominant disease alleles/);
+  documentEvents.change({target:{id:'population-baseline',value:'current'}});
+  assert.match(elements.get('#population-results').innerHTML,/MYH7-indels-current.svg/);
   documentEvents.change({target:{id:'population-strategy',value:'excision'}});
   const changed=elements.get('#population-results').innerHTML;
   assert.match(changed,/MYH7-excision.svg/);
@@ -223,7 +230,7 @@ test('population coverage loads on search, switches strategies and preserves mis
 test('NEFL and MIR96 show autosomal population plots, not a sex-chromosome exclusion',async()=>{
   for(const gene of ['NEFL','MIR96']){
     const html=await route(`#gene=${gene}&tab=population`);
-    assert.match(html,new RegExp(gene+'-CRISPRoff.svg'));
+    assert.match(html,new RegExp(gene+'-CRISPRoff-current.svg'));
     assert.doesNotMatch(html,/Sex-chromosome|No saved population/);
     documentEvents.change({target:{id:'population-strategy',value:'excision'}});
     assert.match(elements.get('#population-results').innerHTML,new RegExp(gene+'-excision.svg'));
@@ -252,4 +259,15 @@ test('report headings have no small subtitles or middle-dot separators',async()=
   assert.match(await route('#gene=MYH7&tab=population'),/<h2>1000Genomes Population Coverage<\/h2>/);
   assert.match(await route('#gene=SPTLC1&tab=mouse'),/<h2>IMPC Mouse phenotypes<\/h2>/);
   for(const page of ['sources','browse'])assert.doesNotMatch(await route('#view='+page),/·|class="subheading"/);
+});
+
+test('current dominant counts and dated assessment downloads render independently of paper counts',async()=>{
+  const snapshot=JSON.parse(await readFile(new URL('../dist/data/dominant-M.json',import.meta.url),'utf8')).MYH7.dominant_current;
+  const html=await route('#gene=MYH7&tab=variants');
+  assert.match(html,/Dominant P\/LP variants \(mapped subset\)/);
+  assert.ok(html.includes(snapshot.date));
+  assert.ok(html.includes(`>${snapshot.count.toLocaleString('en-US')}<`));
+  assert.ok(html.includes(snapshot.export.path));
+  assert.match(html,/Historical dominant P\/LP variants/);
+  assert.match(html,/P\/LP variants with unresolved inheritance/);
 });

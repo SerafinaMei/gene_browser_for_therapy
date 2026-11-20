@@ -39,15 +39,25 @@ class ClinGenTests(unittest.TestCase):
             row=dict(zip(index['fields'],values))
             self.assertEqual(row['cmt'],bool(GENES[row['symbol']]['cmt_assertions']))
 
-    def test_sptlc1_validity_does_not_create_dosage_evidence(self):
-        gene=GENES['SPTLC1']
-        self.assertEqual(len(gene['diseases']),1)
-        record=gene['diseases'][0]
-        self.assertEqual(record['DISEASE ID (MONDO)'],'MONDO:0008086')
-        self.assertEqual(record['MOI'],'AD')
-        self.assertEqual(record['CLASSIFICATION'],'Definitive')
-        self.assertEqual(record['CLASSIFICATION DATE'][:10],'2026-03-31')
-        self.assertEqual(gene['dosage'],[])
+    def test_validity_refresh_preserves_dosage_records(self):
+        # A new disease assertion must not manufacture a dosage-sensitivity score.
+        import importlib.util
+        import tempfile
+        from unittest.mock import patch
+        spec=importlib.util.spec_from_file_location('refresh_clingen',PROJECT/'scripts/refresh_clingen.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as folder:
+            out=Path(folder)
+            original={'symbol':'GENE','hgnc_id':'HGNC:1','dosage':[{'score':3}], 'diseases':[], 'cmt_assertions':[]}
+            (out/'genes-G.json').write_text(json.dumps({'GENE':original}))
+            (out/'index.json').write_text(json.dumps({'fields':['symbol','cmt'],'rows':[['GENE',False]]}))
+            (out/'manifest.json').write_text(json.dumps({'sources':[{'id':'validity'}],'counts':{},'audit':{'unmatched':{}}}))
+            assertion={'GENE ID (HGNC)':'HGNC:1','DISEASE LABEL':'Example','DISEASE ID (MONDO)':'MONDO:1','MOI':'AD'}
+            with patch.object(module,'OUT',out), patch.object(module,'read_validity',return_value=('2026-11-20',[assertion])), patch.object(module,'source_metadata',return_value={'id':'validity'}):
+                module.refresh()
+            updated=json.loads((out/'genes-G.json').read_text())['GENE']
+            self.assertEqual(updated['diseases'],[assertion])
+            self.assertEqual(updated['dosage'],original['dosage'])
 
 
 if __name__=='__main__':

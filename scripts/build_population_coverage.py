@@ -96,7 +96,7 @@ def import_run(root,master_path):
     CACHE.write_bytes(gzip.compress(json.dumps(result,separators=(',',':')).encode(),mtime=0))
     print(f"Imported {len(result['genes'])} genes; {sum(len(g['strategies']) for g in result['genes'].values())} curves; {result['samples']} matched samples; {len(result['excluded'])} sex-chromosome genes withheld.",flush=True)
 
-def draw(symbol,strategy,g,series,total,path):
+def draw(symbol,strategy,g,series,total,path,baseline_label=None,description=None):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -107,11 +107,11 @@ def draw(symbol,strategy,g,series,total,path):
     ax.plot(x,y,color='#326b8b',lw=2.2,marker='o',markersize=3,label='Mutation-agnostic targeting')
     ax.axhline(series['possible']/total*100,color='#737b82',ls='--',lw=1.4,label='Heterozygous coverage before PAM filtering')
     if g['dominant_mutations'] and strategy!='excision':
-        ax.plot(x,[min(k/g['dominant_mutations'],1)*100 for k in x],color='#b34e4e',ls='--',lw=1.7,label='Mutation-specific model (equal-frequency alleles)')
+        ax.plot(x,[min(k/g['dominant_mutations'],1)*100 for k in x],color='#b34e4e',ls='--',lw=1.7,label=baseline_label or 'Mutation-specific model (equal-frequency alleles)')
     ax.set(xlim=(0,max(x)),ylim=(0,102),xlabel='Number of prioritized gRNAs' if strategy=='excision' else 'Number of prioritized therapies (one gRNA each)',ylabel='Cohort haplotypes covered (%)',title=f'{symbol}: {LABELS[strategy]}')
     ax.xaxis.set_major_locator(MaxNLocator(nbins=10,integer=True));ax.set_yticks([0,20,40,60,80,100]);ax.grid(axis='y',color='#e4e8eb',lw=.7);ax.set_axisbelow(True)
     ax.legend(loc='upper left',bbox_to_anchor=(0,1.23),frameon=False,fontsize=8,ncols=1)
-    fig.savefig(path,format='svg',metadata={'Date':None,'Description':f'{total} haplotypes; saved greedy prioritization results.'})
+    fig.savefig(path,format='svg',metadata={'Date':None,'Description':description or f'{total} haplotypes; saved greedy prioritization results.'})
     path.write_text(path.read_text().replace("font-family: 'DejaVu Sans'","font-family: 'DejaVu Sans', Arial, sans-serif"))
     path.write_text("\n".join(line.rstrip() for line in path.read_text().splitlines())+"\n")
     if symbol=='MYH7' and strategy=='indels':fig.savefig('/tmp/MYH7-population-coverage.png',dpi=160)
