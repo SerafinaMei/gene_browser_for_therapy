@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:description>Saved cohort curve; current ClinVar mapped subset 0 alleles as of 2026-11-15; 3 P/LP alleles with unresolved inheritance excluded. Equal-frequency model, not observed disease prevalence.</dc:description>
+    <dc:description>Saved cohort curve; current ClinVar mapped subset 0 alleles as of 2026-11-22; 3 P/LP alleles with unresolved inheritance excluded. Equal-frequency model, not observed disease prevalence.</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>

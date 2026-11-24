@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:description>Saved cohort curve; current ClinVar mapped subset 50 alleles as of 2026-11-15; 157 P/LP alleles with unresolved inheritance excluded. Equal-frequency model, not observed disease prevalence.</dc:description>
+    <dc:description>Saved cohort curve; current ClinVar mapped subset 51 alleles as of 2026-11-22; 156 P/LP alleles with unresolved inheritance excluded. Equal-frequency model, not observed disease prevalence.</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -256,12 +256,12 @@ L 641.81851 178.220815
    </g>
    <g id="line2d_22">
     <path d="M 43.088521 297.198979
-L 142.876853 292.432238
-L 242.665184 287.665496
-L 342.453516 282.898755
-L 442.241847 278.132014
-L 542.030179 273.365273
-L 641.81851 268.598532
+L 142.876853 292.525703
+L 242.665184 287.852427
+L 342.453516 283.179152
+L 442.241847 278.505876
+L 542.030179 273.832601
+L 641.81851 269.159325
 " clip-path="url(#pd2bf80f851)" style="fill: none; stroke-dasharray: 6.29,2.72; stroke-dashoffset: 0; stroke: #b34e4e; stroke-width: 1.7"/>
    </g>
    <g id="patch_3">
@@ -306,7 +306,7 @@ L 66.288521 32.661307
 " style="fill: none; stroke-dasharray: 6.29,2.72; stroke-dashoffset: 0; stroke: #b34e4e; stroke-width: 1.7"/>
     </g>
     <g id="text_19">
-     <text style="font-size: 8px; font-family: 'DejaVu Sans', Arial, sans-serif; text-anchor: start" x="72.688521" y="35.461307" transform="rotate(-0 72.688521 35.461307)">Mutation-specific model (50 mapped dominant alleles; 2026-11-15)</text>
+     <text style="font-size: 8px; font-family: 'DejaVu Sans', Arial, sans-serif; text-anchor: start" x="72.688521" y="35.461307" transform="rotate(-0 72.688521 35.461307)">Mutation-specific model (51 mapped dominant alleles; 2026-11-22)</text>
     </g>
    </g>
   </g>

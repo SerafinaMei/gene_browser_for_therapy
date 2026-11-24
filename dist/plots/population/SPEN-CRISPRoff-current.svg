@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:description>Saved cohort curve; current ClinVar mapped subset 51 alleles as of 2026-11-15; 59 P/LP alleles with unresolved inheritance excluded. Equal-frequency model, not observed disease prevalence.</dc:description>
+    <dc:description>Saved cohort curve; current ClinVar mapped subset 53 alleles as of 2026-11-22; 59 P/LP alleles with unresolved inheritance excluded. Equal-frequency model, not observed disease prevalence.</dc:description>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -208,8 +208,8 @@ L 641.81851 184.978775
    </g>
    <g id="line2d_18">
     <path d="M 43.088521 297.198979
-L 342.453516 292.525703
-L 641.81851 287.852427
+L 342.453516 292.702053
+L 641.81851 288.205128
 " clip-path="url(#pd2bf80f851)" style="fill: none; stroke-dasharray: 6.29,2.72; stroke-dashoffset: 0; stroke: #b34e4e; stroke-width: 1.7"/>
    </g>
    <g id="patch_3">
@@ -254,7 +254,7 @@ L 66.288521 32.661307
 " style="fill: none; stroke-dasharray: 6.29,2.72; stroke-dashoffset: 0; stroke: #b34e4e; stroke-width: 1.7"/>
     </g>
     <g id="text_15">
-     <text style="font-size: 8px; font-family: 'DejaVu Sans', Arial, sans-serif; text-anchor: start" x="72.688521" y="35.461307" transform="rotate(-0 72.688521 35.461307)">Mutation-specific model (51 mapped dominant alleles; 2026-11-15)</text>
+     <text style="font-size: 8px; font-family: 'DejaVu Sans', Arial, sans-serif; text-anchor: start" x="72.688521" y="35.461307" transform="rotate(-0 72.688521 35.461307)">Mutation-specific model (53 mapped dominant alleles; 2026-11-22)</text>
     </g>
    </g>
   </g>
